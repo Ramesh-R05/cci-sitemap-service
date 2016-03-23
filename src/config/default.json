@@ -1,0 +1,14 @@
+{
+  "amqp": {
+    "url": "amqp://dev.rabbitmq.bauer-media.internal",
+    "exchange": "docs",
+    "queue": "sitemap.service"
+  },
+  "db": {
+    "user": "master",
+    "password": "Plow-Certain-Prefer-Swim-3",
+    "schema": "wnsitemap",
+    "host": "wn-listing.coq1yenowiia.ap-southeast-2.rds.amazonaws.com",
+    "dialect": "postgres"
+  }
+}
