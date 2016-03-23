@@ -15,7 +15,7 @@ function extractDataToSave(source, siteId) {
             path: source.path,
             pageDateCreated: source.pageDateCreated,            // <lastmod>
             contentImageUrl: source.contentImageUrl,            // <image:loc>
-            contentTitle: source.contentTitle,                  // <image:title>
+            contentTitle: source.contentTitle,                  // <image:title> or <news:title>
             siteTitle: source.siteTitle,                        // <news:name>
             contentNewsKeywords: source.contentNewsKeywords,    // <news:keywords>
         }
