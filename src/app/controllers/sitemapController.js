@@ -1,15 +1,40 @@
+import Sitemap from '../models/sitemap';
+import { cmsStatus } from '../constants';
+import dataMapper from '../helpers/sitemapDataMapper';
 
 //NB: TEST ONLY
 function post(req, res, next) {}
 
 function save(siteId, fields) {
-    //TODO: (only published status)
-    // Ignore root sitemap: urlName = "sitemap"
-    // Ignore folder, modules, homepage... refer to listing service
+    let sitemap = null;
+    try {
+        sitemap = dataMapper.getSitemapToSave(siteId, fields);
+    } catch(e) {
+        Promise.reject(e);
+    }
+
+    if (!sitemap) {
+        return Promise.resolve();   //Ignores if no need to save
+    }
+    return Sitemap.upsert(sitemap);
 }
 
 function destroy(id) {
-    //TODO: delete if unpublished, trashed
+    return Sitemap.destroy({ where: { id: id }});
+}
+
+function processMessage(status, siteId, content) {
+    switch (status) {
+        case cmsStatus.published:
+            return save(siteId, content);
+        case cmsStatus.trashed:
+        case cmsStatus.unpublished:
+            return destroy(content.id);
+        case cmsStatus.saved:
+            return Promise.resolve();     //Ignores saved status
+        default:
+            return Promise.reject(new Error('Could not find status in message headers'));
+    }
 }
 
 function getIndex(req, res, next) {
@@ -43,8 +68,7 @@ function getNews(req, res, next) {
 
 export default {
     post,
-    save,
-    destroy,
+    processMessage,
     getIndex,
     getSection,
     getNews
