@@ -27,7 +27,7 @@ function extractFieldsToSave(siteId, source) {
             contentImageCaption: source.contentImageCaption,    // <image:caption>
             contentTitle: source.contentTitle,                  // <image:title> or <news:title>
             siteTitle: source.siteTitle,                        // <news:name>
-            contentNewsKeywords: source.contentNewsKeywords,    // <news:keywords>
+            contentNewsKeywords: source.contentNewsKeywords     // <news:keywords>
         }
     };
 }
@@ -57,10 +57,10 @@ function getSitemapToSave(siteId, sourceData) {
 function getSitemapForXML(type, source) {
     const indexFields = {
         loc: source.siteUrl + source.url
-    }
+    };
 
     if (type === sitemapType.index) {
-        return fields;
+        return indexFields;
     }
 
     const baseFields = {
@@ -76,16 +76,16 @@ function getSitemapForXML(type, source) {
             imageLoc: source.contentImageUrl,
             imageTitle: source.contentTitle,
             imageCaption: source.contentImageCaption
-        }
+        };
     }
 
-    if (type == sitemapType.news) {
+    if (type === sitemapType.news) {
         return {
             ...baseFields,
             newsTitle: source.contentTitle,
             newsName: source.siteTitle,
             newsKeywords: source.contentNewsKeywords
-        }
+        };
     }
 }
 
@@ -93,4 +93,4 @@ export default {
     nodeTypesToBeExcluded,
     getSitemapToSave,
     getSitemapForXML
-}
+};
