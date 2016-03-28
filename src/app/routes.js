@@ -5,7 +5,6 @@ import sitemapController from './controllers/sitemapController';
 const router = Router();
 /*eslint-enable */
 
-//NOTE: TBA by requirements
 router.get('/:version/:site/news', sitemapController.getNews);
 router.get('/:version/:site/:section', sitemapController.getSection);
 router.get('/:version/:site', sitemapController.getIndex);
