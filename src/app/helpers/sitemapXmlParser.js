@@ -19,10 +19,10 @@ function getImageNode(data) {
     }
 
     let xml = `<image:image>`
-            + `<image:loc>${data.contentImageUrl}</image:loc>`
-            + `<image:title>${data.contentTitle}</image:title>`
-            + `<image:caption>${data.contentImageCaption ? data.contentImageCaption : ''}</image:caption>`
-            + `</image:image>`;
+        + `<image:loc>${data.contentImageUrl}</image:loc>`
+        + `<image:title>${data.contentTitle}</image:title>`
+        + `<image:caption>${data.contentImageCaption ? data.contentImageCaption : ''}</image:caption>`
+        + `</image:image>`;
     return xml;
 }
 

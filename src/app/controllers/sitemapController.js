@@ -9,13 +9,11 @@ function save(siteId, fields) {
     try {
         sitemap = dataMapper.getSitemapToSave(siteId, fields);
     } catch(e) {
-        Promise.reject(e);
+        Promise.reject(e);  //Validation error needs to be reported
     }
 
-    if (!sitemap) {
-        return Promise.resolve();   //Ignores if no need to save
-    }
-    return Sitemap.upsert(sitemap);
+    //Ignores if no needs to save
+    return sitemap ? Sitemap.upsert(sitemap) : Promise.resolve();
 }
 
 function destroy(id) {
@@ -64,13 +62,14 @@ function getChildNodes(siteId, baseNode) {
     if (!baseNode
         || !baseNode.data
         || !baseNode.data.sitemapRootNodeIds
-        || !Array.isArray(baseNode.data.sitemapRootNodeIds)) {
+        || !Array.isArray(baseNode.data.sitemapRootNodeIds)
+        || baseNode.data.sitemapRootNodeIds.length < 1) {
         return Promise.resolve([]);
     }
 
     //HACK: Because sequelize $overlap does not work for JSONB columns yet, uses $or with $ilike
     const rootNodeIds = baseNode.data.sitemapRootNodeIds;
-    const rootNodeWhere = rootNodeIds.length > 1
+    const rootNodeCondition = rootNodeIds.length > 1
         ? { $or: [ ...rootNodeIds.map(id => getPathQuery(id) ) ] }
         : getPathQuery(rootNodeIds[0]);
 
@@ -78,10 +77,11 @@ function getChildNodes(siteId, baseNode) {
     //HACK: gets "1" or "0" now. should be fixed!
     baseNode.data.isNewsSitemap = Number(baseNode.data.isNewsSitemap);
     if (baseNode.data.isNewsSitemap) {
+        //Additional condition only for news
         const startDate = moment().subtract(news.daylimit, 'days');
         conditions.push({ data: { pageDateCreated: { $gt: startDate.toDate() } } });
     }
-    conditions.push(rootNodeWhere);
+    conditions.push(rootNodeCondition);
 
     return Sitemap.findAll({
         where: getWhereClause(siteId, ...conditions),

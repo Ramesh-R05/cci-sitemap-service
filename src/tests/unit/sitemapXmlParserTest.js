@@ -39,7 +39,7 @@ describe('sitemapXmlParser test', () => {
                     data: {
                         siteUrl: rootUrl,
                         url: 'test1',
-                        pageDateCreated: moment().toISOString(), // 2013-02-04T22:44:30.652Z
+                        pageDateCreated: moment().toISOString(),
                         contentImageUrl: 'http://test.image.com/1111',
                         contentTitle: 'test title1',
                         contentImageCaption: 'test caption1'
@@ -51,7 +51,7 @@ describe('sitemapXmlParser test', () => {
                         url: 'test2',
                         sitemapFrequency: 'Weekly',
                         sitemapPriority: '0.9',
-                        pageDateCreated: moment().subtract(3, 'days').toISOString(), // 2013-02-04T22:44:30.652Z
+                        pageDateCreated: moment().subtract(3, 'days').toISOString(),
                         contentImageUrl: 'http://test.image.com/2222',
                         contentTitle: 'test title2',
                         contentImageCaption: 'test caption2'
@@ -61,7 +61,7 @@ describe('sitemapXmlParser test', () => {
                     data: {
                         siteUrl: rootUrl,
                         url: 'test3',
-                        pageDateCreated: moment().subtract(100, 'days').toISOString(), // 2013-02-04T22:44:30.652Z
+                        pageDateCreated: moment().subtract(100, 'days').toISOString(),
                     }
                 }
             ];
@@ -104,7 +104,7 @@ describe('sitemapXmlParser test', () => {
                         url: 'test2',
                         sitemapFrequency: 'Weekly',
                         sitemapPriority: '0.9',
-                        pageDateCreated: moment().subtract(3, 'days').toISOString(), // 2013-02-04T22:44:30.652Z
+                        pageDateCreated: moment().subtract(3, 'days').toISOString(),
                         contentTitle: 'test title2',
                         siteTitle: 'test news name2',
                         contentNewsKeywords: 'test news keywords2'

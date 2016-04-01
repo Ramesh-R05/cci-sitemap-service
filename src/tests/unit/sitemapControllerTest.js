@@ -36,6 +36,7 @@ describe('sitemapController test', () => {
         sitemapStub.upsert.reset();
         sitemapStub.destroy.reset();
         sitemapStub.findAll.reset();
+        sitemapStub.findOne.reset();
         sitemapStub.restore();
     });
 

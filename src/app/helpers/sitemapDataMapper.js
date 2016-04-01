@@ -28,21 +28,21 @@ function extractFieldsToSave(siteId, source) {
         id: source.id,
         siteId: siteId,
         data: {
-            nodeTypeAlias: source.nodeTypeAlias,                // sitemap index node will have "GoogleSitemap"
-            siteUrl: source.siteUrl,                            // root url
-            url: source.url,                                    // sub url. <loc> = siteUrl + url
+            nodeTypeAlias: source.nodeTypeAlias,
+            siteUrl: source.siteUrl,
+            url: source.url,
             urlName: source.urlName,
             isNewsSitemap: source.isNewsSitemap,
-            sitemapFrequency: source.sitemapFrequency,          // <changefreq>
-            sitemapPriority: source.sitemapPriority,            // <priority>
-            sitemapRootNodeIds: fixSitemapRootNodeIds(siteId, source.sitemapRootNodeIds),        // section id for the index
+            sitemapFrequency: source.sitemapFrequency,
+            sitemapPriority: source.sitemapPriority,
+            sitemapRootNodeIds: fixSitemapRootNodeIds(siteId, source.sitemapRootNodeIds),
             path: source.path,
-            pageDateCreated: source.pageDateCreated,            // <lastmod>
-            contentImageUrl: source.contentImageUrl,            // <image:loc>
-            contentImageCaption: source.contentImageCaption,    // <image:caption>
-            contentTitle: source.contentTitle,                  // <image:title> or <news:title>
-            siteTitle: source.siteTitle,                        // <news:name>
-            contentNewsKeywords: source.contentNewsKeywords     // <news:keywords>
+            pageDateCreated: source.pageDateCreated,
+            contentImageUrl: source.contentImageUrl,
+            contentImageCaption: source.contentImageCaption,
+            contentTitle: source.contentTitle,
+            siteTitle: source.siteTitle,
+            contentNewsKeywords: source.contentNewsKeywords
         }
     };
 }
