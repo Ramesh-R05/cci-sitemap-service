@@ -4,9 +4,6 @@ import Sitemap from '../models/sitemap';
 import dataMapper from '../helpers/sitemapDataMapper';
 import xmlParser from '../helpers/sitemapXmlParser';
 
-//NB: TEST ONLY
-function post(req, res, next) {}
-
 function save(siteId, fields) {
     let sitemap = null;
     try {
@@ -118,7 +115,6 @@ function getSection(req, res, next) {
 }
 
 export default {
-    post,
     processMessage,
     getIndex,
     getSection

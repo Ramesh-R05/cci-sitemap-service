@@ -7,6 +7,5 @@ const router = Router();
 
 router.get('/:version/:site/:section', sitemapController.getSection);
 router.get('/:version/:site', sitemapController.getIndex);
-router.post('/:version/:site', sitemapController.post);
 
 export default router;

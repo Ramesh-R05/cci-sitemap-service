@@ -75,4 +75,4 @@ function generateSitemapXml(type, source, baseNode = {}) {
 
 export default {
     generateSitemapXml
-}
+};

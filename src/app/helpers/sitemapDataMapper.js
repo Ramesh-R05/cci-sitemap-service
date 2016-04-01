@@ -1,5 +1,3 @@
-import { sitemapType } from '../constants';
-
 const nodeTypesToBeExcluded = new Set([
     'Homepage',
     'Sections',
