@@ -6,8 +6,24 @@ const nodeTypesToBeExcluded = new Set([
     'Modules',
     'Folders',
     'Profiles',
-    'Teasers'   //Possible to be added in modules
+    'Teasers'
 ]);
+
+//HACK: sitemapRootNodeIds is supposed to be array and {site}-{id} format but not atm
+//ex. input: 1234, output: [ 'DOLLY-1234' ]
+function fixSitemapRootNodeIds(siteId, sitemapRootNodeIds) {
+    if (!sitemapRootNodeIds) {
+        return null;
+    }
+
+    const roots = Array.isArray(sitemapRootNodeIds) ? sitemapRootNodeIds : [sitemapRootNodeIds];
+    const site = siteId.toUpperCase();
+    if (roots[0].toString().toUpperCase().includes(site)) {
+        return roots;
+    }
+
+    return [...roots.map(root => site + '-' + root)];
+}
 
 function extractFieldsToSave(siteId, source) {
     return {
@@ -18,9 +34,10 @@ function extractFieldsToSave(siteId, source) {
             siteUrl: source.siteUrl,                            // root url
             url: source.url,                                    // sub url. <loc> = siteUrl + url
             urlName: source.urlName,
+            isNewsSitemap: source.isNewsSitemap,
             sitemapFrequency: source.sitemapFrequency,          // <changefreq>
             sitemapPriority: source.sitemapPriority,            // <priority>
-            sitemapRootNodeId: source.sitemapRootNodeId,        // section id for the index
+            sitemapRootNodeIds: fixSitemapRootNodeIds(siteId, source.sitemapRootNodeIds),        // section id for the index
             path: source.path,
             pageDateCreated: source.pageDateCreated,            // <lastmod>
             contentImageUrl: source.contentImageUrl,            // <image:loc>
@@ -54,43 +71,7 @@ function getSitemapToSave(siteId, sourceData) {
     return extractFieldsToSave(siteId, sourceData);
 }
 
-function getSitemapForXML(type, source) {
-    const indexFields = {
-        loc: source.siteUrl + source.url
-    };
-
-    if (type === sitemapType.index) {
-        return indexFields;
-    }
-
-    const baseFields = {
-        ...indexFields,
-        changefreq: source.sitemapFrequency,
-        priority: source.sitemapPriority,
-        lastmod: source.pageDateCreated
-    };
-
-    if (type === sitemapType.section) {
-        return {
-            ...baseFields,
-            imageLoc: source.contentImageUrl,
-            imageTitle: source.contentTitle,
-            imageCaption: source.contentImageCaption
-        };
-    }
-
-    if (type === sitemapType.news) {
-        return {
-            ...baseFields,
-            newsTitle: source.contentTitle,
-            newsName: source.siteTitle,
-            newsKeywords: source.contentNewsKeywords
-        };
-    }
-}
-
 export default {
     nodeTypesToBeExcluded,
-    getSitemapToSave,
-    getSitemapForXML
+    getSitemapToSave
 };

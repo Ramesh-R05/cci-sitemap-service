@@ -1,7 +1,6 @@
 export const sitemapType = {
     index: 'index',
-    section: 'section',
-    news: 'news'
+    section: 'section'
 };
 
 export const cmsStatus = {
@@ -9,4 +8,9 @@ export const cmsStatus = {
     saved: 'saved',
     unpublished: 'unpublished',
     published: 'published'
+};
+
+export const news = {
+    url: 'news',
+    daylimit: 4
 };

@@ -15,7 +15,7 @@
     "coverage": "node ./node_modules/babel-istanbul/lib/cli cover --root ./app --include-all-sources --dir ./coverage --report cobertura --report html --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --ui bdd --compilers js:babel/register tests/setup.js tests/ --recursive",
     "lint": "node ./node_modules/eslint/bin/eslint.js --ext .js app/",
     "start": "npm run migrate && node index.js",
-    "test": "node ./node_modules/mocha/bin/_mocha --ui bdd --compilers js:babel/register tests/setup.js tests/ --recursive",
+    "test": "node ./node_modules/mocha/bin/_mocha -t 10000 --ui bdd --compilers js:babel/register tests/setup.js tests/ --recursive",
     "test:unit": "node ./node_modules/mocha/bin/_mocha --ui bdd --compilers js:babel/register tests/setup.js tests/unit/ --recursive",
     "test:integration": "node ./node_modules/mocha/bin/_mocha --ui bdd --compilers js:babel/register tests/setup.js tests/integration/ --recursive",
     "tdd": "npm run test -- -w",
@@ -33,12 +33,14 @@
     "express": "^4.12.3",
     "keymirror": "^0.1.1",
     "lodash": "^3.9.3",
+    "moment": "^2.12.0",
     "odata-parser": "^1.2.1",
     "pg": "^4.4.3",
     "pg-hstore": "^2.3.2",
     "request": "^2.57.0",
     "sequelize": "^3.17.3",
-    "sequelize-cli": "^2.3.1"
+    "sequelize-cli": "^2.3.1",
+    "xml2js": "^0.4.16"
   },
   "devDependencies": {
     "babel-eslint": "^5.0.0",

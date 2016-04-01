@@ -3,7 +3,7 @@ import sitemapDataMapper from '../../app/helpers/sitemapDataMapper';
 describe('sitemapDataMapper test', () => {
     const siteId = 'test';
 
-    describe('getSitemap test', () => {
+    describe('getSitemapToSave test', () => {
         it('should get a sitemap object if node types are not in exclusion list', () => {
             const source = {
                 id: 'TEST-1234',

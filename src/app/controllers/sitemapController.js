@@ -1,6 +1,8 @@
+import moment from 'moment';
+import { sitemapType, cmsStatus, news } from '../constants';
 import Sitemap from '../models/sitemap';
-import { cmsStatus } from '../constants';
 import dataMapper from '../helpers/sitemapDataMapper';
+import xmlParser from '../helpers/sitemapXmlParser';
 
 //NB: TEST ONLY
 function post(req, res, next) {}
@@ -37,39 +39,87 @@ function processMessage(status, siteId, content) {
     }
 }
 
+function setXmlResponse(res, xml) {
+    res.header('Content-Type', 'text/xml');
+    res.send(xml);
+}
+
+function getWhereClause(siteId, ...conditions) {
+    return {
+        $and: [
+            { siteId: siteId },
+            ...conditions
+        ]
+    };
+}
+
+function getPathQuery(nodeId) {
+    return { data: { path: { $ilike: `%${nodeId}%`} } };
+}
+
+function getBaseNode(siteId, sectionUrl) {
+    return Sitemap.findOne({
+        where: getWhereClause(siteId, { data: { urlName: sectionUrl } })
+    });
+}
+
+function getChildNodes(siteId, baseNode) {
+    if (!baseNode
+        || !baseNode.data
+        || !baseNode.data.sitemapRootNodeIds
+        || !Array.isArray(baseNode.data.sitemapRootNodeIds)) {
+        return Promise.resolve([]);
+    }
+
+    //HACK: Because sequelize $overlap does not work for JSONB columns yet, uses $or with $ilike
+    const rootNodeIds = baseNode.data.sitemapRootNodeIds;
+    const rootNodeWhere = rootNodeIds.length > 1
+        ? { $or: [ ...rootNodeIds.map(id => getPathQuery(id) ) ] }
+        : getPathQuery(rootNodeIds[0]);
+
+    let conditions = [];
+    //HACK: gets "1" or "0" now. should be fixed!
+    baseNode.data.isNewsSitemap = Number(baseNode.data.isNewsSitemap);
+    if (baseNode.data.isNewsSitemap) {
+        const startDate = moment().subtract(news.daylimit, 'days');
+        conditions.push({ data: { pageDateCreated: { $gt: startDate.toDate() } } });
+    }
+    conditions.push(rootNodeWhere);
+
+    return Sitemap.findAll({
+        where: getWhereClause(siteId, ...conditions),
+        order: `data->>'pageDateCreated' desc`
+    })
+    .then(result => {
+        return {baseNode: baseNode, childNodes: result};
+    });
+}
+
 function getIndex(req, res, next) {
-    //TODO:
-    // Where: nodeTypeAlias = "GoogleSitemap" and siteId
-    // Select: <loc> = siteUrl + url
+    return Sitemap.findAll({
+            where: getWhereClause(req.params.site, { data: { nodeTypeAlias: 'GoogleSitemap' } })
+        })
+        .then(result => {
+            const xml = xmlParser.generateSitemapXml(sitemapType.index, result);
+            setXmlResponse(res, xml);
+        })
+        .catch(next);
 }
 
 function getSection(req, res, next) {
-    //TODO:
-    // Get index info
-    //    Where: urlName == req.params.section and siteId
-    //    Select: sitemapRootNodeId, sitemapFrequency, sitemapPriority
-    // Get contents list by above info
-    //    Where: path in sitemapRootNodeId and siteId
-    //    Select: siteUrl, url, pageDateCreated, contentImageUrl, contentTitle
-    //    Order by pageDateCreated desc
+    const { site, section } = req.params;
+    return getBaseNode(site, section)
+        .then(baseNode => getChildNodes(site, baseNode))
+        .then(result => {
+            const xml = xmlParser.generateSitemapXml(sitemapType.section, result.childNodes, result.baseNode);
+            setXmlResponse(res, xml);
+        })
+        .catch(next);
 }
-
-function getNews(req, res, next) {
-    //TODO:
-    // Get index info
-    //    Where: urlName == "news" and siteId
-    //    Select: sitemapRootNodeId, sitemapFrequency, sitemapPriority
-    // Get contents list by above info
-    //    Where: path in sitemapRootNodeId and siteId and last 4 days (by CMS field or hard-code?)
-    //    Select: siteUrl, url, pageDateCreated, siteTitle, contentTitle, contentNewsKeywords
-    //    Order by pageDateCreated desc
-}
-
 
 export default {
     post,
     processMessage,
     getIndex,
-    getSection,
-    getNews
+    getSection
 };
