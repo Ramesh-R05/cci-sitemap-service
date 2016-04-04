@@ -2,6 +2,11 @@
   "amqp": {
     "url": "amqp://live.rabbitmq.bauer-media.internal"
   },
+  "db": {
+    "user": "master",
+    "password": "Bottom-Pretense-Experience-Persuade-5",
+    "host": "wn-sitemap-prod.coq1yenowiia.ap-southeast-2.rds.amazonaws.com"
+  },
   "LoggingService": {
     "loggly": {
       "inputToken": "9b4a2693-dc77-4e7e-a5ee-498845c59793",
