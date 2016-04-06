@@ -2,6 +2,33 @@ import moment from 'moment';
 import { sitemapType } from '../constants';
 
 const xmlHeader = "<?xml version='1.0' encoding='UTF-8' ?>";
+const specialChars = {
+    '&': '&amp;',
+    '#': '&#35;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '(': '&#40;',
+    ')': '&#41;',
+    '"': '&quot;',
+    "'": '&apos;'
+};
+
+function escapeRegExp(string) {
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
+}
+
+function sanitizeSpecialChars(source) {
+    if (typeof source !== 'string') {
+        return source;
+    }
+
+    let target = source;
+    Object.keys(specialChars).forEach(key => {
+        target = target.replace(new RegExp(escapeRegExp(key), 'g'), specialChars[key]);
+    });
+
+    return target;
+}
 
 function generateIndexSitemap(indexes) {
     let xml = xmlHeader + `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
@@ -20,8 +47,8 @@ function getImageNode(data) {
 
     let xml = `<image:image>`
         + `<image:loc>${data.contentImageUrl}</image:loc>`
-        + `<image:title>${data.contentTitle}</image:title>`
-        + `<image:caption>${data.contentImageCaption ? data.contentImageCaption : ''}</image:caption>`
+        + `<image:title>${sanitizeSpecialChars(data.contentTitle)}</image:title>`
+        + `<image:caption>${data.contentImageCaption ? sanitizeSpecialChars(data.contentImageCaption) : ''}</image:caption>`
         + `</image:image>`;
     return xml;
 }
@@ -32,9 +59,9 @@ function getNewsNode(data) {
     }
 
     let xml = `<news:news>`
-        + `<news:title>${data.contentTitle}</news:title>`
-        + `<news:name>${data.siteTitle}</news:name>`
-        + `<news:keywords>${data.contentNewsKeywords ? data.contentNewsKeywords : ''}</news:keywords>`
+        + `<news:title>${sanitizeSpecialChars(data.contentTitle)}</news:title>`
+        + `<news:name>${sanitizeSpecialChars(data.siteTitle)}</news:name>`
+        + `<news:keywords>${data.contentNewsKeywords ? sanitizeSpecialChars(data.contentNewsKeywords) : ''}</news:keywords>`
         + `</news:news>`;
     return xml;
 }
