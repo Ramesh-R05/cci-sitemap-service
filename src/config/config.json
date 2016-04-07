@@ -1,0 +1,24 @@
+{
+  "description": "This is used by sequelize to perform migrations",
+  "development": {
+    "username": "master",
+    "password": "Plow-Certain-Prefer-Swim-3",
+    "database": "wnsitemap",
+    "host": "wn-sitemap.coq1yenowiia.ap-southeast-2.rds.amazonaws.com",
+    "dialect": "postgres"
+  },
+  "dev": {
+    "username": "master",
+    "password": "Plow-Certain-Prefer-Swim-3",
+    "database": "wnsitemap",
+    "host": "wn-sitemap.coq1yenowiia.ap-southeast-2.rds.amazonaws.com",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "master",
+    "password": "Bottom-Pretense-Experience-Persuade-5",
+    "database": "wnsitemap",
+    "host": "wn-sitemap-prod.coq1yenowiia.ap-southeast-2.rds.amazonaws.com",
+    "dialect": "postgres"
+  }
+}
