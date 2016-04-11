@@ -1,6 +1,6 @@
 {
   "amqp": {
-    "url": "amqp://dev.rabbitmq.bauer-media.internal",
+    "url": "amqp://admin:bxm123@dev.rabbitmq.bauer-media.internal?heartbeat=10",
     "exchange": "docs",
     "queue": "sitemap.service"
   },
