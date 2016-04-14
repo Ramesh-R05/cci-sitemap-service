@@ -25,7 +25,7 @@
     "@bxm/eslint-config-microservice": "^0.0.2",
     "@bxm/microservice": "^1.0.2",
     "@bxm/node-apm": "^1.0.1",
-    "@bxm/pro-amqplib": "^0.0.7",
+    "@bxm/pro-amqplib": "^1.0.1",
     "@bxm/winston-logger": "^1.0.19",
     "amqplib": "0.4.0",
     "babel": "5.3.0",
