@@ -72,8 +72,15 @@ function generateSectionSitemap(sections, baseNode) {
         + ` xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"`
         + ` xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`
         + ` xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0">`;
-    const baseFrequency = baseNode.data.sitemapFrequency ? baseNode.data.sitemapFrequency : '';
-    const basePriority = baseNode.data.sitemapPriority ? baseNode.data.sitemapPriority : '';
+
+    let baseFrequency = '';
+    let basePriority = '';
+    let baseNodeData = baseNode.data;
+    if (baseNodeData) {
+        if (baseNodeData.sitemapFrequency) baseFrequency = baseNodeData.sitemapFrequency;
+        if (baseNodeData.sitemapPriority) basePriority = baseNodeData.sitemapPriority;
+    }
+
     sections.forEach(section => {
         const data = section.data;
         xml += `<url>`
