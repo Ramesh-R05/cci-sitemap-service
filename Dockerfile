@@ -1,4 +1,4 @@
-FROM bauer/node
+FROM docker.registry2.mgmt.local:80/bauer/node
 
 ARG http_proxy=http://proxy.mgmt.local:3128
 ARG https_proxy=https://proxy.mgmt.local:3128
