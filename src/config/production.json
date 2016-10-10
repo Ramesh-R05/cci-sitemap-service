@@ -1,6 +1,6 @@
 {
   "amqp": {
-    "url": "amqp://admin:bxm123@live.rabbitmq.bauer-media.internal?heartbeat=10"
+    "url": "amqp://admin:Quiet-Factory-Lack-Way-3@live.rabbitmq.bauer-media.internal?heartbeat=10"
   },
   "db": {
     "user": "master",
