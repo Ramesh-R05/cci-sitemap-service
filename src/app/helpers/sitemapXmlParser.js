@@ -60,15 +60,21 @@ function getNewsNode(data) {
 
     let xml = `<news:news>`
         + `<news:title>${sanitizeSpecialChars(data.contentTitle)}</news:title>`
+        +`<news:publication>`
         + `<news:name>${sanitizeSpecialChars(data.siteTitle)}</news:name>`
+        + `<news:language>en</news:language>`
+        +`</news:publication>`
         + `<news:keywords>${data.contentNewsKeywords ? sanitizeSpecialChars(data.contentNewsKeywords) : ''}</news:keywords>`
+        + `<news:publication_date>${moment(data.pageDateCreated).format('YYYY-MM-DDThh:mmTZD')}</news:publication_date>`
         + `</news:news>`;
     return xml;
 }
 
 function generateSectionSitemap(sections, baseNode) {
     let xml = xmlHeader
-        + ` <urlset xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"`
+        + ` <urlset`
+        + ` xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"`
+        + ` xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"`
         + ` xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"`
         + ` xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`
         + ` xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0">`;
@@ -88,7 +94,8 @@ function generateSectionSitemap(sections, baseNode) {
             + `<changefreq>${data.sitemapFrequency ? data.sitemapFrequency : baseFrequency}</changefreq>`
             + `<priority>${data.sitemapPriority ? data.sitemapPriority : basePriority}</priority>`
             + `<lastmod>${moment(data.pageDateCreated).format('Y-MM-DD')}</lastmod>`
-            + (baseNode.data.isNewsSitemap ? getNewsNode(data) : getImageNode(data))
+            + (baseNode.data.isNewsSitemap ? getNewsNode(data) : '')
+            + getImageNode(data)
             + `<mobile:mobile/>`
             + `</url>`;
     });
