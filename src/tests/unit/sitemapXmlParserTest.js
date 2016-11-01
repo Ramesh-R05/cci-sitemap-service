@@ -12,7 +12,7 @@ describe('sitemapXmlParser test', () => {
             expect(headerObj['xmlns']).to.contain('http://www.sitemaps.org/schemas/sitemap/0.9');
             expect(headerObj['xmlns:image']).to.contain('http://www.google.com/schemas/sitemap-image');
             expect(headerObj['xmlns:video']).to.contain('http://www.google.com/schemas/sitemap-video');
-            expect(headerObj['xmlns:news']).to.contain('http://www.google.com/schemas/sitemap-news');
+            expect(headerObj['xmlns:n']).to.contain('http://www.google.com/schemas/sitemap-news');
             expect(headerObj['xmlns:mobile']).to.contain('http://www.google.com/schemas/sitemap-mobile');
         }
 
@@ -121,13 +121,13 @@ describe('sitemapXmlParser test', () => {
                 expect(urlNodes[0].loc[0]).to.equal(news[0].data.siteUrl + news[0].data.url);
                 expect(urlNodes[0].changefreq[0]).to.equal(baseNode.data.sitemapFrequency); //Takes base node's one if doesn't exist
                 expect(urlNodes[0].priority[0]).to.equal(baseNode.data.sitemapPriority); //Takes base node's one if doesn't exist
-                expect(urlNodes[0]['news:news'][0]['news:title'][0]).to.equal(news[0].data.contentTitle);
+                expect(urlNodes[0]['n:news'][0]['n:title'][0]).to.equal(news[0].data.contentTitle);
                 expect(urlNodes[1].changefreq[0]).to.equal(news[1].data.sitemapFrequency);
                 expect(urlNodes[1].priority[0]).to.equal(news[1].data.sitemapPriority);
                 expect(urlNodes[1].lastmod[0]).to.equal(moment(news[1].data.pageDateCreated).format('Y-MM-DD'));
-                expect(urlNodes[1]['news:news'][0]['news:publication'][0]['news:name'][0]).to.equal(news[1].data.siteTitle);
-                expect(urlNodes[1]['news:news'][0]['news:publication'][0]['news:language'][0]).to.equal('en');
-                expect(urlNodes[1]['news:news'][0]['news:keywords'][0]).to.equal(news[1].data.contentNewsKeywords);
+                expect(urlNodes[1]['n:news'][0]['n:publication'][0]['n:name'][0]).to.equal(news[1].data.siteTitle);
+                expect(urlNodes[1]['n:news'][0]['n:publication'][0]['n:language'][0]).to.equal('en');
+                expect(urlNodes[1]['n:news'][0]['n:keywords'][0]).to.equal(news[1].data.contentNewsKeywords);
             });
         });
     });

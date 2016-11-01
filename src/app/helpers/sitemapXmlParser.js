@@ -58,15 +58,15 @@ function getNewsNode(data) {
         return '';
     }
 
-    let xml = `<news:news>`
-        + `<news:title>${sanitizeSpecialChars(data.contentTitle)}</news:title>`
-        +`<news:publication>`
-        + `<news:name>${sanitizeSpecialChars(data.siteTitle)}</news:name>`
-        + `<news:language>en</news:language>`
-        +`</news:publication>`
-        + `<news:keywords>${data.contentNewsKeywords ? sanitizeSpecialChars(data.contentNewsKeywords) : ''}</news:keywords>`
-        + `<news:publication_date>${moment(data.pageDateCreated).format('YYYY-MM-DDThh:mmTZD')}</news:publication_date>`
-        + `</news:news>`;
+    let xml = `<n:news>`
+        + `<n:title>${sanitizeSpecialChars(data.contentTitle)}</n:title>`
+        +`<n:publication>`
+        + `<n:name>${sanitizeSpecialChars(data.siteTitle)}</n:name>`
+        + `<n:language>en</n:language>`
+        +`</n:publication>`
+        + `<n:keywords>${data.contentNewsKeywords ? sanitizeSpecialChars(data.contentNewsKeywords) : ''}</n:keywords>`
+        + `<n:publication_date>${moment(data.pageDateCreated).format('YYYY-MM-DDThh:mmTZD')}</n:publication_date>`
+        + `</n:news>`;
     return xml;
 }
 
@@ -76,7 +76,7 @@ function generateSectionSitemap(sections, baseNode) {
         + ` xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"`
         + ` xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"`
         + ` xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"`
-        + ` xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`
+        + ` xmlns:n="http://www.google.com/schemas/sitemap-news/0.9"`
         + ` xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0">`;
 
     let baseFrequency = '';
