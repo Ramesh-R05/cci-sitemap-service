@@ -130,5 +130,85 @@ describe('sitemapXmlParser test', () => {
                 expect(urlNodes[1]['n:news'][0]['n:keywords'][0]).to.equal(news[1].data.contentNewsKeywords);
             });
         });
+
+        it('should set priority to default if not specified for news sitemaps', () => {
+            const baseNode = { data: { isNewsSitemap: 1 } };
+            const news = [
+                {
+                    data: {
+                        siteUrl: rootUrl,
+                        url: 'test1',
+                        pageDateCreated: moment().toISOString(),
+                        contentTitle: 'test title1',
+                        siteTitle: 'test news name1',
+                        contentNewsKeywords: 'test news keywords1'
+                    }
+                }
+            ];
+            const xml = sitemapXmlParser.generateSitemapXml(sitemapType.section, news, baseNode);
+            parseString(xml, (err, result) => {
+                expect(result.urlset.url[0].priority[0]).to.equal('1.0');
+            });
+        });
+
+        it('should set priority as specified for news sitemaps', () => {
+            const baseNode = { data: { isNewsSitemap: 1, sitemapPriority: '0.1' } };
+            const news = [
+                {
+                    data: {
+                        siteUrl: rootUrl,
+                        url: 'test1',
+                        pageDateCreated: moment().toISOString(),
+                        contentTitle: 'test title1',
+                        siteTitle: 'test news name1',
+                        contentNewsKeywords: 'test news keywords1'
+                    }
+                }
+            ];
+            const xml = sitemapXmlParser.generateSitemapXml(sitemapType.section, news, baseNode);
+            parseString(xml, (err, result) => {
+                expect(result.urlset.url[0].priority[0]).to.equal('0.1');
+            });
+        });
+
+        it('should set priority to default if not specified for non-news sitemaps', () => {
+            const baseNode = { data: { isNewsSitemap: 0 } };
+            const news = [
+                {
+                    data: {
+                        siteUrl: rootUrl,
+                        url: 'test1',
+                        pageDateCreated: moment().toISOString(),
+                        contentTitle: 'test title1',
+                        siteTitle: 'test news name1',
+                        contentNewsKeywords: 'test news keywords1'
+                    }
+                }
+            ];
+            const xml = sitemapXmlParser.generateSitemapXml(sitemapType.section, news, baseNode);
+            parseString(xml, (err, result) => {
+                expect(result.urlset.url[0].priority[0]).to.equal('0.7');
+            });
+        });
+
+        it('should set priority as specified for non-news sitemaps', () => {
+            const baseNode = { data: { isNewsSitemap: 0, sitemapPriority: '0.2' } };
+            const news = [
+                {
+                    data: {
+                        siteUrl: rootUrl,
+                        url: 'test1',
+                        pageDateCreated: moment().toISOString(),
+                        contentTitle: 'test title1',
+                        siteTitle: 'test news name1',
+                        contentNewsKeywords: 'test news keywords1'
+                    }
+                }
+            ];
+            const xml = sitemapXmlParser.generateSitemapXml(sitemapType.section, news, baseNode);
+            parseString(xml, (err, result) => {
+                expect(result.urlset.url[0].priority[0]).to.equal('0.2');
+            });
+        });
     });
 });

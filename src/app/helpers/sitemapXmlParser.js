@@ -60,10 +60,10 @@ function getNewsNode(data) {
 
     let xml = `<n:news>`
         + `<n:title>${sanitizeSpecialChars(data.contentTitle)}</n:title>`
-        +`<n:publication>`
+        + `<n:publication>`
         + `<n:name>${sanitizeSpecialChars(data.siteTitle)}</n:name>`
         + `<n:language>en</n:language>`
-        +`</n:publication>`
+        + `</n:publication>`
         + `<n:keywords>${data.contentNewsKeywords ? sanitizeSpecialChars(data.contentNewsKeywords) : ''}</n:keywords>`
         + `<n:publication_date>${moment(data.pageDateCreated).format('YYYY-MM-DDThh:mmTZD')}</n:publication_date>`
         + `</n:news>`;
@@ -80,7 +80,7 @@ function generateSectionSitemap(sections, baseNode) {
         + ` xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0">`;
 
     let baseFrequency = '';
-    let basePriority = '';
+    let basePriority = baseNode.data.isNewsSitemap ? '1.0' : '0.7';
     let baseNodeData = baseNode.data;
     if (baseNodeData) {
         if (baseNodeData.sitemapFrequency) baseFrequency = baseNodeData.sitemapFrequency;
