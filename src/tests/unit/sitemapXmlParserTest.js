@@ -9,9 +9,10 @@ describe('sitemapXmlParser test', () => {
         const rootUrl = 'http://test.com/';
 
         function assertXmlHeader(headerObj) {
+            expect(headerObj['xmlns']).to.contain('http://www.sitemaps.org/schemas/sitemap/0.9');
             expect(headerObj['xmlns:image']).to.contain('http://www.google.com/schemas/sitemap-image');
             expect(headerObj['xmlns:video']).to.contain('http://www.google.com/schemas/sitemap-video');
-            expect(headerObj['xmlns:news']).to.contain('http://www.google.com/schemas/sitemap-news');
+            expect(headerObj['xmlns:n']).to.contain('http://www.google.com/schemas/sitemap-news');
             expect(headerObj['xmlns:mobile']).to.contain('http://www.google.com/schemas/sitemap-mobile');
         }
 
@@ -74,13 +75,13 @@ describe('sitemapXmlParser test', () => {
                 expect(urlNodes[0].loc[0]).to.equal(sections[0].data.siteUrl + sections[0].data.url);
                 expect(urlNodes[0].changefreq[0]).to.equal(baseNode.data.sitemapFrequency); //Takes base node's one if doesn't exist
                 expect(urlNodes[0].priority[0]).to.equal(baseNode.data.sitemapPriority); //Takes base node's one if doesn't exist
-                expect(urlNodes[0]["image:image"][0]["image:loc"][0]).to.equal(sections[0].data.contentImageUrl);
+                expect(urlNodes[0]['image:image'][0]['image:loc'][0]).to.equal(sections[0].data.contentImageUrl);
                 expect(urlNodes[1].changefreq[0]).to.equal(sections[1].data.sitemapFrequency);
                 expect(urlNodes[1].priority[0]).to.equal(sections[1].data.sitemapPriority);
                 expect(urlNodes[1].lastmod[0]).to.equal(moment(sections[1].data.pageDateCreated).format('Y-MM-DD'));
-                expect(urlNodes[1]["image:image"][0]["image:title"][0]).to.equal(sections[1].data.contentTitle);
+                expect(urlNodes[1]['image:image'][0]['image:title'][0]).to.equal(sections[1].data.contentTitle);
                 expect(urlNodes[2].lastmod[0]).to.equal(moment(sections[2].data.pageDateCreated).format('Y-MM-DD'));    //No day limit
-                expect(urlNodes[2]["image:image"]).to.not.exist;
+                expect(urlNodes[2]['image:image']).to.not.exist;
             });
 
         });
@@ -120,12 +121,93 @@ describe('sitemapXmlParser test', () => {
                 expect(urlNodes[0].loc[0]).to.equal(news[0].data.siteUrl + news[0].data.url);
                 expect(urlNodes[0].changefreq[0]).to.equal(baseNode.data.sitemapFrequency); //Takes base node's one if doesn't exist
                 expect(urlNodes[0].priority[0]).to.equal(baseNode.data.sitemapPriority); //Takes base node's one if doesn't exist
-                expect(urlNodes[0]["news:news"][0]["news:title"][0]).to.equal(news[0].data.contentTitle);
+                expect(urlNodes[0]['n:news'][0]['n:title'][0]).to.equal(news[0].data.contentTitle);
                 expect(urlNodes[1].changefreq[0]).to.equal(news[1].data.sitemapFrequency);
                 expect(urlNodes[1].priority[0]).to.equal(news[1].data.sitemapPriority);
                 expect(urlNodes[1].lastmod[0]).to.equal(moment(news[1].data.pageDateCreated).format('Y-MM-DD'));
-                expect(urlNodes[1]["news:news"][0]["news:name"][0]).to.equal(news[1].data.siteTitle);
-                expect(urlNodes[1]["news:news"][0]["news:keywords"][0]).to.equal(news[1].data.contentNewsKeywords);
+                expect(urlNodes[1]['n:news'][0]['n:publication'][0]['n:name'][0]).to.equal(news[1].data.siteTitle);
+                expect(urlNodes[1]['n:news'][0]['n:publication'][0]['n:language'][0]).to.equal('en');
+                expect(urlNodes[1]['n:news'][0]['n:keywords'][0]).to.equal(news[1].data.contentNewsKeywords);
+            });
+        });
+
+        it('should set priority to default if not specified for news sitemaps', () => {
+            const baseNode = { data: { isNewsSitemap: 1 } };
+            const news = [
+                {
+                    data: {
+                        siteUrl: rootUrl,
+                        url: 'test1',
+                        pageDateCreated: moment().toISOString(),
+                        contentTitle: 'test title1',
+                        siteTitle: 'test news name1',
+                        contentNewsKeywords: 'test news keywords1'
+                    }
+                }
+            ];
+            const xml = sitemapXmlParser.generateSitemapXml(sitemapType.section, news, baseNode);
+            parseString(xml, (err, result) => {
+                expect(result.urlset.url[0].priority[0]).to.equal('1.0');
+            });
+        });
+
+        it('should set priority as specified for news sitemaps', () => {
+            const baseNode = { data: { isNewsSitemap: 1, sitemapPriority: '0.1' } };
+            const news = [
+                {
+                    data: {
+                        siteUrl: rootUrl,
+                        url: 'test1',
+                        pageDateCreated: moment().toISOString(),
+                        contentTitle: 'test title1',
+                        siteTitle: 'test news name1',
+                        contentNewsKeywords: 'test news keywords1'
+                    }
+                }
+            ];
+            const xml = sitemapXmlParser.generateSitemapXml(sitemapType.section, news, baseNode);
+            parseString(xml, (err, result) => {
+                expect(result.urlset.url[0].priority[0]).to.equal('0.1');
+            });
+        });
+
+        it('should set priority to default if not specified for non-news sitemaps', () => {
+            const baseNode = { data: { isNewsSitemap: 0 } };
+            const news = [
+                {
+                    data: {
+                        siteUrl: rootUrl,
+                        url: 'test1',
+                        pageDateCreated: moment().toISOString(),
+                        contentTitle: 'test title1',
+                        siteTitle: 'test news name1',
+                        contentNewsKeywords: 'test news keywords1'
+                    }
+                }
+            ];
+            const xml = sitemapXmlParser.generateSitemapXml(sitemapType.section, news, baseNode);
+            parseString(xml, (err, result) => {
+                expect(result.urlset.url[0].priority[0]).to.equal('0.7');
+            });
+        });
+
+        it('should set priority as specified for non-news sitemaps', () => {
+            const baseNode = { data: { isNewsSitemap: 0, sitemapPriority: '0.2' } };
+            const news = [
+                {
+                    data: {
+                        siteUrl: rootUrl,
+                        url: 'test1',
+                        pageDateCreated: moment().toISOString(),
+                        contentTitle: 'test title1',
+                        siteTitle: 'test news name1',
+                        contentNewsKeywords: 'test news keywords1'
+                    }
+                }
+            ];
+            const xml = sitemapXmlParser.generateSitemapXml(sitemapType.section, news, baseNode);
+            parseString(xml, (err, result) => {
+                expect(result.urlset.url[0].priority[0]).to.equal('0.2');
             });
         });
     });

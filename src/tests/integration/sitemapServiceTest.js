@@ -99,7 +99,7 @@ describe('Sitemap service integration test', () => {
                         expect(result.urlset.url).to.have.lengthOf(2);
                         result.urlset.url.forEach(i => {
                             expect(i.loc[0]).to.contain('news');
-                            expect(i["news:news"][0]["news:title"][0]).to.contain('newstitle');
+                            expect(i["n:news"][0]["n:title"][0]).to.contain('newstitle');
                         });
                         done();
                     });
