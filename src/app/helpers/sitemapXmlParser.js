@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { sitemapType } from '../constants';
 
 const xmlHeader = "<?xml version='1.0' encoding='UTF-8' ?>";
@@ -46,7 +45,7 @@ function getImageNode(data) {
     }
 
     let xml = `<image:image>`
-        + `<image:loc>${data.contentImageUrl}</image:loc>`
+        + `<image:loc><![CDATA[${data.contentImageUrl}]]></image:loc>`
         + `<image:title>${sanitizeSpecialChars(data.contentTitle)}</image:title>`
         + `<image:caption>${data.contentImageCaption ? sanitizeSpecialChars(data.contentImageCaption) : ''}</image:caption>`
         + `</image:image>`;
@@ -65,7 +64,7 @@ function getNewsNode(data) {
         + `<n:language>en</n:language>`
         + `</n:publication>`
         + `<n:keywords>${data.contentNewsKeywords ? sanitizeSpecialChars(data.contentNewsKeywords) : ''}</n:keywords>`
-        + `<n:publication_date>${moment(data.pageDateCreated).format('YYYY-MM-DDThh:mmTZD')}</n:publication_date>`
+        + `<n:publication_date>${data.pageDateCreated}</n:publication_date>`
         + `</n:news>`;
     return xml;
 }
@@ -89,11 +88,13 @@ function generateSectionSitemap(sections, baseNode) {
 
     sections.forEach(section => {
         const data = section.data;
+
+
         xml += `<url>`
             + `<loc>${data.siteUrl + data.url}</loc>`
             + `<changefreq>${data.sitemapFrequency ? data.sitemapFrequency : baseFrequency}</changefreq>`
             + `<priority>${data.sitemapPriority ? data.sitemapPriority : basePriority}</priority>`
-            + `<lastmod>${moment(data.pageDateCreated).format('Y-MM-DD')}</lastmod>`
+            + `<lastmod>${data.pageDateCreated}</lastmod>`
             + (baseNode.data.isNewsSitemap ? getNewsNode(data) : '')
             + getImageNode(data)
             + `<mobile:mobile/>`

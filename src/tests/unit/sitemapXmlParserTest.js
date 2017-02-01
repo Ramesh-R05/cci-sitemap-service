@@ -1,4 +1,3 @@
-import moment from 'moment';
 import xml2js from 'xml2js';
 import { sitemapType } from '../../app/constants';
 import sitemapXmlParser from '../../app/helpers/sitemapXmlParser';
@@ -40,7 +39,7 @@ describe('sitemapXmlParser test', () => {
                     data: {
                         siteUrl: rootUrl,
                         url: 'test1',
-                        pageDateCreated: moment().toISOString(),
+                        pageDateCreated: '2017-01-29T02:41:14.338Z',
                         contentImageUrl: 'http://test.image.com/1111',
                         contentTitle: 'test title1',
                         contentImageCaption: 'test caption1'
@@ -52,7 +51,7 @@ describe('sitemapXmlParser test', () => {
                         url: 'test2',
                         sitemapFrequency: 'Weekly',
                         sitemapPriority: '0.9',
-                        pageDateCreated: moment().subtract(3, 'days').toISOString(),
+                        pageDateCreated: '2017-01-29T02:41:14.338Z',
                         contentImageUrl: 'http://test.image.com/2222',
                         contentTitle: 'test title2',
                         contentImageCaption: 'test caption2'
@@ -62,7 +61,7 @@ describe('sitemapXmlParser test', () => {
                     data: {
                         siteUrl: rootUrl,
                         url: 'test3',
-                        pageDateCreated: moment().subtract(100, 'days').toISOString(),
+                        pageDateCreated: '2017-01-29T02:41:14.338Z'
                     }
                 }
             ];
@@ -78,9 +77,9 @@ describe('sitemapXmlParser test', () => {
                 expect(urlNodes[0]['image:image'][0]['image:loc'][0]).to.equal(sections[0].data.contentImageUrl);
                 expect(urlNodes[1].changefreq[0]).to.equal(sections[1].data.sitemapFrequency);
                 expect(urlNodes[1].priority[0]).to.equal(sections[1].data.sitemapPriority);
-                expect(urlNodes[1].lastmod[0]).to.equal(moment(sections[1].data.pageDateCreated).format('Y-MM-DD'));
+                expect(urlNodes[1].lastmod[0]).to.equal(sections[1].data.pageDateCreated);
                 expect(urlNodes[1]['image:image'][0]['image:title'][0]).to.equal(sections[1].data.contentTitle);
-                expect(urlNodes[2].lastmod[0]).to.equal(moment(sections[2].data.pageDateCreated).format('Y-MM-DD'));    //No day limit
+                expect(urlNodes[2].lastmod[0]).to.equal(sections[2].data.pageDateCreated);    //No day limit
                 expect(urlNodes[2]['image:image']).to.not.exist;
             });
 
@@ -93,7 +92,7 @@ describe('sitemapXmlParser test', () => {
                     data: {
                         siteUrl: rootUrl,
                         url: 'test1',
-                        pageDateCreated: moment().toISOString(),
+                        pageDateCreated: '2017-01-29T02:41:14.338Z',
                         contentTitle: 'test title1',
                         siteTitle: 'test news name1',
                         contentNewsKeywords: 'test news keywords1'
@@ -105,7 +104,7 @@ describe('sitemapXmlParser test', () => {
                         url: 'test2',
                         sitemapFrequency: 'Weekly',
                         sitemapPriority: '0.9',
-                        pageDateCreated: moment().subtract(3, 'days').toISOString(),
+                        pageDateCreated:'2017-01-29T02:41:14.338Z',
                         contentTitle: 'test title2',
                         siteTitle: 'test news name2',
                         contentNewsKeywords: 'test news keywords2'
@@ -124,7 +123,7 @@ describe('sitemapXmlParser test', () => {
                 expect(urlNodes[0]['n:news'][0]['n:title'][0]).to.equal(news[0].data.contentTitle);
                 expect(urlNodes[1].changefreq[0]).to.equal(news[1].data.sitemapFrequency);
                 expect(urlNodes[1].priority[0]).to.equal(news[1].data.sitemapPriority);
-                expect(urlNodes[1].lastmod[0]).to.equal(moment(news[1].data.pageDateCreated).format('Y-MM-DD'));
+                expect(urlNodes[1].lastmod[0]).to.equal(news[1].data.pageDateCreated);
                 expect(urlNodes[1]['n:news'][0]['n:publication'][0]['n:name'][0]).to.equal(news[1].data.siteTitle);
                 expect(urlNodes[1]['n:news'][0]['n:publication'][0]['n:language'][0]).to.equal('en');
                 expect(urlNodes[1]['n:news'][0]['n:keywords'][0]).to.equal(news[1].data.contentNewsKeywords);
@@ -138,7 +137,7 @@ describe('sitemapXmlParser test', () => {
                     data: {
                         siteUrl: rootUrl,
                         url: 'test1',
-                        pageDateCreated: moment().toISOString(),
+                        pageDateCreated: '2017-01-29T02:41:14.338Z',
                         contentTitle: 'test title1',
                         siteTitle: 'test news name1',
                         contentNewsKeywords: 'test news keywords1'
@@ -158,7 +157,7 @@ describe('sitemapXmlParser test', () => {
                     data: {
                         siteUrl: rootUrl,
                         url: 'test1',
-                        pageDateCreated: moment().toISOString(),
+                        pageDateCreated: '2017-01-29T02:41:14.338Z',
                         contentTitle: 'test title1',
                         siteTitle: 'test news name1',
                         contentNewsKeywords: 'test news keywords1'
@@ -178,7 +177,7 @@ describe('sitemapXmlParser test', () => {
                     data: {
                         siteUrl: rootUrl,
                         url: 'test1',
-                        pageDateCreated: moment().toISOString(),
+                        pageDateCreated: '2017-01-29T02:41:14.338Z',
                         contentTitle: 'test title1',
                         siteTitle: 'test news name1',
                         contentNewsKeywords: 'test news keywords1'
@@ -198,7 +197,7 @@ describe('sitemapXmlParser test', () => {
                     data: {
                         siteUrl: rootUrl,
                         url: 'test1',
-                        pageDateCreated: moment().toISOString(),
+                        pageDateCreated: '2017-01-29T02:41:14.338Z',
                         contentTitle: 'test title1',
                         siteTitle: 'test news name1',
                         contentNewsKeywords: 'test news keywords1'
