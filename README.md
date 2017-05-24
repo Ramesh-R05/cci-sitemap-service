@@ -1,5 +1,6 @@
 # sitemap-service
-
+[![Run Status](https://api.shippable.com/projects/583638bb1845dd10001a6e6b/badge?branch=master)](https://app.shippable.com/github/bauerxcelmedia/sitemap-service)
+[![Coverage Badge](https://api.shippable.com/projects/583638bb1845dd10001a6e6b/coverageBadge?branch=master)](https://app.shippable.com/github/bauerxcelmedia/sitemap-service)
 
 ## Prerequisite
 
