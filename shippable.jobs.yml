@@ -1,0 +1,101 @@
+jobs:
+
+# sync pipeline to CI
+  - name: sitemap-service_runCI
+    type: runCI
+    steps:
+      - OUT: sitemap-service-img-master
+      - OUT: sitemap-service-img-branch
+
+# manifest for a branch image
+  - name: sitemap-service-man-branch
+    type: manifest
+    steps:
+      - IN: sitemap-service-img-branch
+      - IN: sitemap-service-opts-sit
+      - TASK: managed
+    flags:
+      - sitemap-service
+
+# manifest for master image
+  - name: sitemap-service-man-master
+    type: manifest
+    steps:
+      - IN: sitemap-service-img-master
+      - IN: sitemap-service-opts-sit
+      - TASK: managed
+
+# DEV deployment for a non-master branch
+  - name: sitemap-service-sit-deploy-branch
+    type: deploy
+    always:
+      - NOTIFY: sitemap-slack-notifications
+    steps:
+      - IN: sitemap-service-man-branch # for non-master, don't auto deploy.
+        switch: off
+      - IN: sitemap-service-env-sit-ecs
+      - IN: sitemap-service-params-sit
+      - IN: sitemap-service-alb-sit-branch
+        applyTo:
+          - manifest: sitemap-service-man-branch
+            image: sitemap-service-img-branch
+            port: 3000
+      - TASK: managed
+        deployMethod: upgrade
+
+# DEV deployment for master branch
+  - name: sitemap-service-sit-deploy-master
+    type: deploy
+    always:
+      - NOTIFY: sitemap-slack-notifications
+    steps:
+      - IN: sitemap-service-man-master # for master - auto deploy to SIT
+        switch: on
+      - IN: sitemap-service-env-sit-ecs
+      - IN: sitemap-service-params-sit
+      - IN: sitemap-service-alb-sit
+        applyTo:
+          - manifest: sitemap-service-man-master
+            image: sitemap-service-img-master
+            port: 3000
+      - TASK: managed
+        deployMethod: upgrade
+
+  - name: sitemaps-validation # Test Stub site
+    type: runSh
+    always:
+      - NOTIFY: sitemap-slack-notifications
+    steps:
+     - IN: sitemap-service-sit-deploy-master
+     - TASK:
+        - script: curl http://alb.sit.bxm.internal/sitemap/
+
+# Package release for production release
+  - name: sitemap-service-release-master
+    type: release
+    steps:
+      - IN: sitemap-service-man-master
+        switch: off
+      - IN: sitemaps-validation
+      - IN: sitemap-service-version
+      - TASK: managed
+        bump: minor
+
+# PROD deployment for master branch
+  - name: sitemap-service-prod-deploy-master
+    type: deploy
+    always:
+      - NOTIFY: sitemap-slack-notifications
+    steps:
+      - IN: sitemap-service-replicas-production
+      - IN: sitemap-service-release-master
+        switch: off
+      - IN: sitemap-service-env-prod-ecs
+      - IN: sitemap-service-params-prod
+      - IN: sitemap-service-alb-prod
+        applyTo:
+        - manifest: sitemap-service-man-master
+          image: sitemap-service-img-master
+          port: 3000
+      - TASK: managed
+        deployMethod: upgrade

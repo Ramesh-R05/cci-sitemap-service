@@ -1,0 +1,114 @@
+resources:
+
+#
+# Common setup that should be moved into a common shippable repo
+#
+  - name: sitemap-slack-notifications
+    type: notification                          #required
+    integration: slack-bauerxcelmedia
+    pointer:
+      recipients:
+        - "#au-shippable"
+
+# Docker Image for the now-site
+  - name: sitemap-service-img-master
+    type: image
+    integration: AWS-digital-services-ECR
+    pointer:
+      sourceName: "317367993082.dkr.ecr.ap-southeast-2.amazonaws.com/sitemap-service"
+    seed:
+      versionName: latest
+
+# Docker Image for the now-site
+  - name: sitemap-service-img-branch
+    type: image
+    integration: AWS-digital-services-ECR
+    pointer:
+      sourceName: "317367993082.dkr.ecr.ap-southeast-2.amazonaws.com/sitemap-service"
+    seed:
+      versionName: latest
+
+# Release version
+  - name: sitemap-service-version
+    type: version
+    seed:
+      versionName: "1.0.0"
+
+#
+# DEV environment configuration
+#
+  - name: sitemap-service-env-sit-ecs
+    type: cluster
+    integration: AWS-digital-nonprod
+    pointer:
+      sourceName : "services_ecs"
+      region: "ap-southeast-2"
+
+  - name: sitemap-service-alb-sit
+    type: loadBalancer
+    pointer:
+      sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:014901580825:targetgroup/sitemap-service-sit/242b152aa1608e47"
+      method: application
+
+  - name: sitemap-service-alb-sit-branch
+    type: loadBalancer
+    pointer:
+      sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:014901580825:targetgroup/branch-sitemap-service-sit/055f96dbf155b2f1"
+      method: application
+
+# Parameters for service
+  - name: sitemap-service-params-sit
+    type: params
+    version:
+      params:
+        NODE_ENV: "dev"
+        APP_MOUNT_PATH: "sitemap/"
+
+# Docker Image Options
+  - name: sitemap-service-opts-sit
+    type: dockerOptions
+    version:
+      memory: 384
+      memoryReservation: 256
+      cpuShares: 128
+      portMappings:
+        - 0:3000
+      publishAllPorts : true
+      logConfig:
+        type: awslogs
+        options:
+          awslogs-group: "services_ecs"
+          awslogs-region: "ap-southeast-2"
+          awslogs-stream-prefix: "sitemap-service"
+
+# PRODUCTION environment configuration (TO BE DONE)
+#
+
+# PROD environment configuration
+#
+  - name: sitemap-service-env-prod-ecs
+    type: cluster
+    integration: AWS-digital-prod
+    pointer:
+      sourceName : "services_ecs"
+      region: "ap-southeast-2"
+
+  - name: sitemap-service-alb-prod
+    type: loadBalancer
+    pointer:
+      sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:622156575630:targetgroup/sitemap-service-prod/f104767c76b36545"
+      method: application
+
+# ENV parameters
+  - name: sitemap-service-params-prod
+    type: params
+    version:
+      params:
+        NODE_ENV: "production"
+        APP_MOUNT_PATH: "sitemap/"
+        APM_KEY: "d182e4391d2b340c7ae190bcb7a24b754f148ec4"
+
+  - name: sitemap-service-replicas-production
+    type: replicas
+    version:
+      count: 3
