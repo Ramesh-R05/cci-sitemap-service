@@ -96,7 +96,7 @@ resources:
   - name: sitemap-service-alb-prod
     type: loadBalancer
     pointer:
-      sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:622156575630:targetgroup/sitemap-service-prod/f104767c76b36545"
+      sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:622156575630:targetgroup/sitemap-service-prod/ecc559bc50353b36"
       method: application
 
 # ENV parameters
