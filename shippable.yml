@@ -22,7 +22,7 @@ build:
     - node --version
     - mkdir -p ./shippable/testresults ./shippable/codecoverage ./shippable/buildoutput
     - cd src
-    - NODE_ENV=production npm install
+    - npm install
     - echo "module.exports={buildNumber:'$BRANCH_NAME'};" > version.js
     - cat version.js
     - npm build

@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@bxm/eslint-config-microservice": "^0.0.2",
-    "@bxm/microservice": "^1.0.2",
+    "@bxm/microservice": "^2.0.1",
     "@bxm/node-apm": "^1.0.1",
     "@bxm/pro-amqplib": "^1.0.1",
     "@bxm/winston-logger": "^1.0.19",
