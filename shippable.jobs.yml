@@ -68,7 +68,7 @@ jobs:
     steps:
      - IN: sitemap-service-sit-deploy-master
      - TASK:
-        - script: curl http://alb.sit.bxm.internal/sitemap/
+        - script: curl http://services.sit.bxm.internal/sitemap/
 
 # Package release for production release
   - name: sitemap-service-release-master

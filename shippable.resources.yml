@@ -47,13 +47,13 @@ resources:
   - name: sitemap-service-alb-sit
     type: loadBalancer
     pointer:
-      sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:014901580825:targetgroup/sitemap-service-sit/242b152aa1608e47"
+      sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:014901580825:targetgroup/sitemap-service-sit/c256baa636d28456"
       method: application
 
   - name: sitemap-service-alb-sit-branch
     type: loadBalancer
     pointer:
-      sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:014901580825:targetgroup/branch-sitemap-service-sit/055f96dbf155b2f1"
+      sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:014901580825:targetgroup/sitemap-service-branch-sit/4030e0300975b6ef"
       method: application
 
 # Parameters for service
@@ -96,7 +96,7 @@ resources:
   - name: sitemap-service-alb-prod
     type: loadBalancer
     pointer:
-      sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:622156575630:targetgroup/sitemap-service-prod/ecc559bc50353b36"
+      sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:622156575630:targetgroup/sitemap-service-prod/2a6e2017643d4800"
       method: application
 
 # ENV parameters
