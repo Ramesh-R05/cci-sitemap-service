@@ -9,6 +9,14 @@ resources:
     pointer:
       recipients:
         - "#au-shippable"
+        
+  - name: sitemap-service-repo
+    type: gitRepo
+    integration: production-github
+    pointer:
+      sourceName: bauerxcelmedia/sitemap-service
+      branch: master
+
 
 # Docker Image for the now-site
   - name: sitemap-service-img-master

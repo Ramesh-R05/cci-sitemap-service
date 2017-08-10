@@ -1,3 +1,11 @@
+# This jobs are only used for Sitemap Service
+
+####################################################################
+# Refer to http://docs.shippable.com/reference/jobs-overview/      #
+# Resources are located in shippable.resources.yml file            #
+# Jobs are numbered to visualize sequence                          #
+####################################################################
+
 jobs:
 
 # sync pipeline to CI
@@ -61,14 +69,24 @@ jobs:
       - TASK: managed
         deployMethod: upgrade
 
-  - name: sitemaps-validation # Test Stub site
+# Smoke test
+  - name: sitemap-service-smoketest
     type: runSh
     always:
       - NOTIFY: sitemap-slack-notifications
     steps:
      - IN: sitemap-service-sit-deploy-master
+     - IN: sitemap-service-repo
+       switch: off 
      - TASK:
-        - script: curl http://services.sit.bxm.internal/sitemap/
+        - script: curl https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
+        - script: source ~/.nvm/nvm.sh
+        - script: nvm install "5.5.0"
+        - script: nvm use "5.5.0"
+        - script: cd ./IN/sitemap-service-repo/gitRepo/src
+        - script: npm set registry http://npm.digital.bauer-media.net.au
+        - script: npm install
+        - script: npm run test:smoke
 
 # Package release for production release
   - name: sitemap-service-release-master
@@ -76,7 +94,7 @@ jobs:
     steps:
       - IN: sitemap-service-man-master
         switch: off
-      - IN: sitemaps-validation
+      - IN: sitemap-service-smoketest
       - IN: sitemap-service-version
       - TASK: managed
         bump: minor
