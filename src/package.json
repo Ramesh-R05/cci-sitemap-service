@@ -20,6 +20,7 @@
     "test:unit": "node ./node_modules/mocha/bin/_mocha --ui bdd --compilers js:babel/register tests/setup.js tests/unit/ --recursive",
     "test:integration": "node ./node_modules/mocha/bin/_mocha --ui bdd --compilers js:babel/register tests/setup.js tests/integration/ --recursive",
     "tdd": "npm run test -- -w",
+    "test:smoke": "node ./node_modules/mocha/bin/_mocha tests/smoke/*.js",
     "build": "npm run lint"
   },
   "dependencies": {
