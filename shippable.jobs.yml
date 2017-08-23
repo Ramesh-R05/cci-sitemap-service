@@ -1,4 +1,4 @@
-# This jobs are only used for Sitemap Service
+# This jobs are only used for Sitemap service
 
 ####################################################################
 # Refer to http://docs.shippable.com/reference/jobs-overview/      #
@@ -8,112 +8,111 @@
 
 jobs:
 
-# sync pipeline to CI
+  #1
   - name: sitemap-service_runCI
     type: runCI
     steps:
-      - OUT: sitemap-service-img-master
-      - OUT: sitemap-service-img-branch
+      - OUT: sitemap-service-master-docker-registry
+      - OUT: sitemap-service-branch-docker-registry
 
-# manifest for a branch image
-  - name: sitemap-service-man-branch
+  #2BRANCH
+  - name: sitemap-service-manifest-branch
     type: manifest
     steps:
-      - IN: sitemap-service-img-branch
-      - IN: sitemap-service-opts-sit
+      - IN: sitemap-service-branch-docker-registry
+      - IN: sitemap-service-docker-opts
       - TASK: managed
     flags:
       - sitemap-service
 
-# manifest for master image
-  - name: sitemap-service-man-master
-    type: manifest
-    steps:
-      - IN: sitemap-service-img-master
-      - IN: sitemap-service-opts-sit
-      - TASK: managed
-
-# DEV deployment for a non-master branch
+  #3BRANCH
   - name: sitemap-service-sit-deploy-branch
     type: deploy
     always:
       - NOTIFY: sitemap-slack-notifications
     steps:
-      - IN: sitemap-service-man-branch # for non-master, don't auto deploy.
+      - IN: sitemap-service-manifest-branch # for non-master, don't auto deploy.
         switch: off
-      - IN: sitemap-service-env-sit-ecs
-      - IN: sitemap-service-params-sit
-      - IN: sitemap-service-alb-sit-branch
+      - IN: sitemap-service-sit-ecs
+      - IN: sitemap-service-sit-params
+      - IN: sitemap-service-sit-alb-branch
         applyTo:
-          - manifest: sitemap-service-man-branch
-            image: sitemap-service-img-branch
+          - manifest: sitemap-service-manifest-branch
+            image: sitemap-service-branch-docker-registry
             port: 3000
       - TASK: managed
-        deployMethod: upgrade
+        deployMethod: replace
 
-# DEV deployment for master branch
+
+  #2
+  - name: sitemap-service-manifest-master
+    type: manifest
+    steps:
+      - IN: sitemap-service-master-docker-registry
+      - IN: sitemap-service-docker-opts
+      - TASK: managed
+
+  #3
   - name: sitemap-service-sit-deploy-master
     type: deploy
     always:
       - NOTIFY: sitemap-slack-notifications
     steps:
-      - IN: sitemap-service-man-master # for master - auto deploy to SIT
+      - IN: sitemap-service-manifest-master # for master - auto deploy to SIT
         switch: on
-      - IN: sitemap-service-env-sit-ecs
-      - IN: sitemap-service-params-sit
-      - IN: sitemap-service-alb-sit
+      - IN: sitemap-service-sit-ecs
+      - IN: sitemap-service-sit-params
+      - IN: sitemap-service-sit-alb
         applyTo:
-          - manifest: sitemap-service-man-master
-            image: sitemap-service-img-master
+          - manifest: sitemap-service-manifest-master
+            image: sitemap-service-master-docker-registry
             port: 3000
       - TASK: managed
-        deployMethod: upgrade
+        deployMethod: replace
 
-# Smoke test
+  #4
   - name: sitemap-service-smoketest
     type: runSh
     always:
       - NOTIFY: sitemap-slack-notifications
     steps:
-     - IN: sitemap-service-sit-deploy-master
-     - IN: sitemap-service-repo
-       switch: off 
-     - TASK:
-        - script: curl https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
-        - script: source ~/.nvm/nvm.sh
-        - script: nvm install "5.5.0"
-        - script: nvm use "5.5.0"
-        - script: cd ./IN/sitemap-service-repo/gitRepo/src
-        - script: npm set registry http://npm.digital.bauer-media.net.au
-        - script: npm install
-        - script: npm run test:smoke
+    - IN: sitemap-service-sit-deploy-master
+    - IN: sitemap-service-repo
+    - TASK:
+      - script: curl https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
+      - script: source ~/.nvm/nvm.sh
+      - script: nvm install "5.5.0"
+      - script: nvm use "5.5.0"
+      - script: cd ./IN/sitemap-service-repo/gitRepo/src
+      - script: npm set registry http://npm.digital.bauer-media.net.au
+      - script: npm install
+      - script: URL=http://services.sit.bxm.internal/sitemap/ npm run test:smoke
 
-# Package release for production release
-  - name: sitemap-service-release-master
+  #5 PROD
+  - name: sitemap-service-package-master
     type: release
     steps:
-      - IN: sitemap-service-man-master
+      - IN: sitemap-service-manifest-master
         switch: off
       - IN: sitemap-service-smoketest
       - IN: sitemap-service-version
       - TASK: managed
         bump: minor
 
-# PROD deployment for master branch
+  #6 PROD
   - name: sitemap-service-prod-deploy-master
     type: deploy
     always:
       - NOTIFY: sitemap-slack-notifications
     steps:
-      - IN: sitemap-service-replicas-production
-      - IN: sitemap-service-release-master
+      - IN: sitemap-service-package-master
         switch: off
       - IN: sitemap-service-env-prod-ecs
-      - IN: sitemap-service-params-prod
+      - IN: sitemap-service-prod-alb
       - IN: sitemap-service-alb-prod
         applyTo:
-        - manifest: sitemap-service-man-master
-          image: sitemap-service-img-master
+        - manifest: sitemap-service-manifest-master
+          image: sitemap-service-master-docker-registry
           port: 3000
       - TASK: managed
         deployMethod: upgrade
