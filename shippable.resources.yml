@@ -1,4 +1,4 @@
-# This resources are only used for Sitemap Service
+# This resources are only used for Sitemap Service 
 
 ####################################################################
 # Refer to http://docs.shippable.com/reference/resources-overview/ #
@@ -68,7 +68,7 @@ resources:
     type: cluster
     integration: AWS-digital-nonprod
     pointer:
-      sourceName : "sitemap_ecs"
+      sourceName : "services_ecs"
       region: "ap-southeast-2"
 
   - name: sitemap-service-sit-alb
