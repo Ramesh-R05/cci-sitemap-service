@@ -1,9 +1,14 @@
 //HACK: supertest doesn't support ES6 yet
+var nconf = require('nconf');
+nconf.argv().env();
 var request = require('supertest');
-const app = "http://services.sit.bxm.internal/sitemap";
+var baseUrl = nconf.get('URL');
 const assert = require('chai').assert;
 var schemas  = require("./util/schemas.js")
 
+const app = baseUrl;
+
+console.log('running on url :: ' + baseUrl);
 
 describe('Smoke test of sitemap service', function() {
     this.retries(4);

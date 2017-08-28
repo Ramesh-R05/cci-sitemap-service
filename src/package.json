@@ -21,7 +21,8 @@
     "test:integration": "node ./node_modules/mocha/bin/_mocha --ui bdd --compilers js:babel/register tests/setup.js tests/integration/ --recursive",
     "tdd": "npm run test -- -w",
     "test:smoke": "node ./node_modules/mocha/bin/_mocha tests/smoke/*.js",
-    "build": "npm run lint"
+    "build": "npm run lint",
+    "test:cd": "node ./node_modules/mocha/bin/_mocha -t 10000 --ui bdd --compilers js:babel/register tests/setup.js tests/smoke/ --reporter xunit --reporter-options output=./reports/TEST-smokeResults.xml"
   },
   "dependencies": {
     "@bxm/eslint-config-microservice": "^0.0.2",
@@ -40,7 +41,8 @@
     "request": "2.57.0",
     "sequelize": "3.17.3",
     "sequelize-cli": "2.3.1",
-    "xml2js": "0.4.16"
+    "xml2js": "0.4.16",
+    "nconf": "^0.8.4"
   },
   "devDependencies": {
     "babel-eslint": "^5.0.0",
