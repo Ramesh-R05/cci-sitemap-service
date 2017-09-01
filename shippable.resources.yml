@@ -103,7 +103,7 @@ resources:
       sourceName : "services_ecs"
       region: "ap-southeast-2"
 
-  - name: sitemap-service-prod-alb-fix
+  - name: sitemap-service-prod-alb
     type: loadBalancer
     pointer:
       sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:622156575630:targetgroup/sitemap-service-prod/2a6e2017643d4800"

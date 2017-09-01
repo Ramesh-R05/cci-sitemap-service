@@ -110,7 +110,7 @@ jobs:
         switch: off
       - IN: sitemap-service-prod-ecs
       - IN: sitemap-service-prod-params
-      - IN: sitemap-service-prod-alb-fix
+      - IN: sitemap-service-prod-alb
         applyTo:
         - manifest: sitemap-service-manifest-master
           image: sitemap-service-master-docker-registry
