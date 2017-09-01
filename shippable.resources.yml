@@ -96,20 +96,20 @@ resources:
   # PROD environment configuration
   ####################################
 
-  - name: sitemap-service-env-prod-ecs
+  - name: sitemap-service-prod-ecs
     type: cluster
     integration: AWS-digital-prod
     pointer:
       sourceName : "services_ecs"
       region: "ap-southeast-2"
 
-  - name: sitemap-service-alb-prod
+  - name: sitemap-service-prod-alb-fix
     type: loadBalancer
     pointer:
       sourceName: "arn:aws:elasticloadbalancing:ap-southeast-2:622156575630:targetgroup/sitemap-service-prod/2a6e2017643d4800"
       method: application
 
-  - name: sitemap-service-prod-alb
+  - name: sitemap-service-prod-params
     type: params
     version:
       params:

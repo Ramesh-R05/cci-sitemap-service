@@ -108,9 +108,9 @@ jobs:
     steps:
       - IN: sitemap-service-package-master
         switch: off
-      - IN: sitemap-service-env-prod-ecs
-      - IN: sitemap-service-prod-alb
-      - IN: sitemap-service-alb-prod
+      - IN: sitemap-service-prod-ecs
+      - IN: sitemap-service-prod-params
+      - IN: sitemap-service-prod-alb-fix
         applyTo:
         - manifest: sitemap-service-manifest-master
           image: sitemap-service-master-docker-registry
