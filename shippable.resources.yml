@@ -18,7 +18,7 @@ resources:
       logConfig:
         type: awslogs
         options:
-          awslogs-group: "services_ecs"
+          awslogs-group: "app_ecs"
           awslogs-region: "ap-southeast-2"
           awslogs-stream-prefix: "sitemap-service"
 
@@ -68,7 +68,7 @@ resources:
     type: cluster
     integration: AWS-digital-nonprod
     pointer:
-      sourceName : "services_ecs"
+      sourceName : "app_ecs"
       region: "ap-southeast-2"
 
   - name: sitemap-service-sit-alb
@@ -90,7 +90,6 @@ resources:
         NODE_ENV: "dev"
         APP_ENV: "sit"
         APM_KEY: "c777240932e6282ffacc6a42ae6a0709426522bb"
-        APP_MOUNT_PATH: "sitemap/"
 
   ####################################
   # PROD environment configuration
@@ -100,7 +99,7 @@ resources:
     type: cluster
     integration: AWS-digital-prod
     pointer:
-      sourceName : "services_ecs"
+      sourceName : "app_ecs"
       region: "ap-southeast-2"
 
   - name: sitemap-service-prod-alb
@@ -115,5 +114,4 @@ resources:
       params:
         NODE_ENV: "production"
         APP_ENV: "prod"
-        APP_MOUNT_PATH: "sitemap/"
         APM_KEY: "c777240932e6282ffacc6a42ae6a0709426522bb"

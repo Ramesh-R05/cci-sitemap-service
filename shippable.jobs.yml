@@ -87,7 +87,7 @@ jobs:
       - script: cd ./IN/sitemap-service-repo/gitRepo/src
       - script: npm set registry http://npm.digital.bauer-media.net.au
       - script: npm install
-      - script: URL=http://services.sit.bxm.internal/sitemap/ npm run test:smoke
+      - script: URL=http://sitemap-service.sit.bxm.net.au npm run test:smoke
 
   #5 PROD
   - name: sitemap-service-package-master
