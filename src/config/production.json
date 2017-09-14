@@ -16,8 +16,7 @@
         "live"
       ],
       "json": true,
-      "level": "error",
-      "proxy": "http://proxy.mgmt.local:3128"
+      "level": "error"
     }
   }
 }

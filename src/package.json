@@ -26,10 +26,10 @@
   },
   "dependencies": {
     "@bxm/eslint-config-microservice": "^0.0.2",
-    "@bxm/microservice": "^2.0.1",
+    "@bxm/microservice": "^3.0.0",
     "@bxm/node-apm": "^1.0.1",
     "@bxm/pro-amqplib": "^1.0.1",
-    "@bxm/winston-logger": "^1.0.19",
+    "@bxm/winston-logger": "^1.1.0",
     "amqplib": "0.4.0",
     "babel": "5.3.0",
     "config": "1.19.0",
@@ -42,7 +42,8 @@
     "sequelize": "3.17.3",
     "sequelize-cli": "2.3.1",
     "xml2js": "0.4.16",
-    "nconf": "^0.8.4"
+    "nconf": "^0.8.4",
+    "newrelic": "^1.40.0"
   },
   "devDependencies": {
     "babel-eslint": "^5.0.0",
