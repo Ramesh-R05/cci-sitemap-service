@@ -1,4 +1,4 @@
-process.env.APP_KEY = 'sitemap';
+process.env.APP_KEY = 'sitemap-service';
 process.title = process.env.APP_KEY;
 
 require('babel/register')();
