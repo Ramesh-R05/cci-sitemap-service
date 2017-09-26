@@ -18,7 +18,7 @@
     "username": "master",
     "password": "Bottom-Pretense-Experience-Persuade-5",
     "database": "wnsitemap",
-    "host": "wn-sitemap-prod.coq1yenowiia.ap-southeast-2.rds.amazonaws.com",
+    "host": "db.sitemap-service.prod.bxm.internal",
     "dialect": "postgres"
   }
 }
