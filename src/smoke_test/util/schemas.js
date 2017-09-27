@@ -1,10 +1,11 @@
 module.exports = {
 
     sitemapIndexSchema: function () {
-        return '<?xml version=\'1.0\' encoding=\'UTF-8\' ?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/win</loc></sitemap><sitemap><loc>http://dev.dolly-site.bau' +
-        'er-media.net.au/sitemap/video</loc></sitemap><sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/lifestyle</loc></sitemap><sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/beauty</loc></sitemap><sitemap><loc>http://dev.dolly-site.bauer-m' +
-        'edia.net.au/sitemap/news</loc></sitemap><sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/site</loc></sitemap><sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/celebrity</loc></sitemap><sitemap><loc>http://dev.dolly-site.bauer-media.ne' +
-        't.au/sitemap/fashion</loc></sitemap><sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/dolly-doctor</loc></sitemap></sitemapindex>'
+        return '<?xml version=\'1.0\' encoding=\'UTF-8\' ?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/win</loc></sitemap>' +
+            '<sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/video</loc></sitemap><sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/lifestyle</loc></sitemap>' +
+            '<sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/beauty</loc></sitemap><sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/site</loc></sitemap><sitemap>' +
+            '<loc>http://dev.dolly-site.bauer-media.net.au/sitemap/celebrity</loc></sitemap><sitemap><loc>http://dev.dolly-site.bauer-media.net.au/sitemap/fashion</loc></sitemap><sitemap>' +
+            '<loc>http://dev.dolly-site.bauer-media.net.au/sitemap/dolly-doctor</loc></sitemap><sitemap><loc>http://dev.dolly-site.bauer-media.net.au/news</loc></sitemap></sitemapindex>'
     },
 
     sitemapSectionHeaderSchema: function () {
