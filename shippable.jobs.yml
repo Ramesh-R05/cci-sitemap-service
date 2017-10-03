@@ -22,8 +22,6 @@ jobs:
       - IN: sitemap-service-branch-docker-registry
       - IN: sitemap-service-docker-opts
       - TASK: managed
-    flags:
-      - sitemap-service
 
   #3BRANCH
   - name: sitemap-service-sit-deploy-branch
