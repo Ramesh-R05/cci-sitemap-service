@@ -88,6 +88,8 @@ jobs:
       - script: npm set registry http://npm.digital.bauer-media.net.au
       - script: npm install
       - script: URL=http://sitemap-service.sit.bxm.net.au npm run test:smoke
+    on_failure:
+      - NOTIFY: sitemap-service-deployment-notifications
 
   #5 PROD
   - name: sitemap-service-package-master

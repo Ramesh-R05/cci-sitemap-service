@@ -29,12 +29,21 @@ resources:
       sourceName: bauerxcelmedia/sitemap-service
       branch: master
 
+  # Slack connection
   - name: sitemap-slack-notifications
     type: notification                          #required
     integration: slack-bauerxcelmedia
     pointer:
       recipients:
         - "#au-shippable"
+        
+  # Slack connection
+  - name: sitemap-service-deployment-notifications
+    type: notification                          #required
+    integration: slack-bauerxcelmedia
+    pointer:
+      recipients:
+        - "#survivors_outlast_au"
 
   - name: sitemap-service-master-docker-registry
     type: image
