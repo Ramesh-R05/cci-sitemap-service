@@ -47,7 +47,7 @@ branches:
 #Integration and Notifications
 integrations:
   hub:
-    - integrationName: AWS-digital-services-ECR
+    - integrationName: ECR-digital-services-AWS
       type: ecr
       region: ap-southeast-2
 
