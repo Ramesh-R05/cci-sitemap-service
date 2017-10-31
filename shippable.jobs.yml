@@ -105,6 +105,7 @@ jobs:
     type: deploy
     always:
       - NOTIFY: sitemap-slack-notifications
+      - NOTIFY: sitemap-service-deployment-notifications
     steps:
       - IN: sitemap-service-package-master
         switch: off
