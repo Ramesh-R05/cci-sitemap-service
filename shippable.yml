@@ -4,7 +4,7 @@ build_environment: Ubuntu 12.04
 
 # language setting
 language: node_js
-node_js: "5.5.0"
+node_js: "8.9.1"
 
 # App environment variables
 env:
@@ -22,7 +22,7 @@ build:
     - node --version
     - mkdir -p ./shippable/testresults ./shippable/codecoverage ./shippable/buildoutput
     - cd src
-    - yarn
+    - npm install
     - echo "module.exports={buildNumber:'$BRANCH_NAME'};" > version.js
     - cat version.js
     - npm run test:ci
