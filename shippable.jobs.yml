@@ -83,7 +83,7 @@ jobs:
       - script: nvm install "5.5.0"
       - script: nvm use "5.5.0"
       - script: cd ./IN/sitemap-service-repo/gitRepo/src
-      - script: npm set registry http://npm.digital.bauer-media.net.au
+      - script: npm set @bxm:registry http://npm.digital.bauer-media.net.au
       - script: npm install
       - script: URL=http://sitemap-service.sit.bxm.net.au npm run test:smoke
     on_failure:
