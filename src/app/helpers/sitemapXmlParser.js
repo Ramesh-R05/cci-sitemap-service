@@ -29,23 +29,36 @@ function sanitizeSpecialChars(source) {
     return target;
 }
 
+function httpsSet(url) {
+    if (!url || typeof url !== 'string') return '';
+    if (url.startsWith('https') || url.includes('foodtolove')) return url;
+
+    return url.replace('http://', 'https://');
+}
+
 function generateIndexSitemap(indexes) {
     let xml = xmlHeader + `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
     indexes.forEach(index => {
         const data = index.data;
-        xml += `<sitemap><loc>${data.siteUrl + data.url}</loc></sitemap>`;
+        const dataSiteUrl = httpsSet(data.siteUrl);
+        xml += `<sitemap><loc>${dataSiteUrl + data.url}</loc></sitemap>`;
     });
     xml += '</sitemapindex>';
     return xml;
 }
 
 function getImageNode(data) {
-    if (!data.contentImageUrl) {
+    let imageUrl = data.contentImageUrl;
+
+    if (!imageUrl || typeof imageUrl !== 'string' || imageUrl.startsWith('https')) {
         return '';
     }
 
+    imageUrl = imageUrl.replace('http://d3lp4xedbqa8a5.cloudfront.net', 'https://d3lp4xedbqa8a5.cloudfront.net');
+    imageUrl = imageUrl.replace('http://cdn.assets.cougar.bauer-media.net.au', 'https://d3lp4xedbqa8a5.cloudfront.net');
+
     let xml = `<image:image>`
-        + `<image:loc><![CDATA[${data.contentImageUrl}]]></image:loc>`
+        + `<image:loc><![CDATA[${imageUrl}]]></image:loc>`
         + `<image:title>${sanitizeSpecialChars(data.contentTitle)}</image:title>`
         + `<image:caption>${data.contentImageCaption ? sanitizeSpecialChars(data.contentImageCaption) : ''}</image:caption>`
         + `</image:image>`;
@@ -88,10 +101,10 @@ function generateSectionSitemap(sections, baseNode) {
 
     sections.forEach(section => {
         const data = section.data;
-
+        const dataSiteUrl = httpsSet(data.siteUrl);
 
         xml += `<url>`
-            + `<loc>${data.siteUrl + data.url}</loc>`
+            + `<loc>${dataSiteUrl + data.url}</loc>`
             + `<changefreq>${data.sitemapFrequency ? data.sitemapFrequency : baseFrequency}</changefreq>`
             + `<priority>${data.sitemapPriority ? data.sitemapPriority : basePriority}</priority>`
             + `<lastmod>${data.pageDateCreated}</lastmod>`

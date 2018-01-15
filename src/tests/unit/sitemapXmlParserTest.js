@@ -6,6 +6,7 @@ const parseString = xml2js.parseString;
 describe('sitemapXmlParser test', () => {
     describe('generateSitemapXml test', () => {
         const rootUrl = 'http://test.com/';
+        const secureRootUrl = 'https://test.com/';
 
         function assertXmlHeader(headerObj) {
             expect(headerObj['xmlns']).to.contain('http://www.sitemaps.org/schemas/sitemap/0.9');
@@ -27,7 +28,7 @@ describe('sitemapXmlParser test', () => {
                 expect(result.sitemapindex.sitemap).to.have.lengthOf(urls.length);
                 expect(result.sitemapindex.$.xmlns).to.contain('http://www.sitemaps.org/schemas/sitemap');
                 urls.forEach((url, index) => {
-                    expect(result.sitemapindex.sitemap[index].loc[0]).to.equal(rootUrl + url);
+                    expect(result.sitemapindex.sitemap[index].loc[0]).to.equal(secureRootUrl + url);
                 });
             });
         });
@@ -63,15 +64,23 @@ describe('sitemapXmlParser test', () => {
                         url: 'test3',
                         pageDateCreated: '2017-01-29T02:41:14.338Z'
                     }
+                },
+                {
+                    data: {
+                        siteUrl: 'http://www.foodtolove.com.au/',
+                        url: 'test4',
+                        pageDateCreated: '2017-01-29T02:41:14.338Z'
+                    }
                 }
             ];
 
+            const expectedUrl = secureRootUrl + sections[0].data.url;
             const xml = sitemapXmlParser.generateSitemapXml(sitemapType.section, sections, baseNode);
             parseString(xml, (err, result) => {
                 const urlNodes = result.urlset.url;
                 assertXmlHeader(result.urlset.$);
                 expect(result.urlset.url).to.have.lengthOf(sections.length);
-                expect(urlNodes[0].loc[0]).to.equal(sections[0].data.siteUrl + sections[0].data.url);
+                expect(urlNodes[0].loc[0]).to.equal(expectedUrl);
                 expect(urlNodes[0].changefreq[0]).to.equal(baseNode.data.sitemapFrequency); //Takes base node's one if doesn't exist
                 expect(urlNodes[0].priority[0]).to.equal(baseNode.data.sitemapPriority); //Takes base node's one if doesn't exist
                 expect(urlNodes[0]['image:image'][0]['image:loc'][0]).to.equal(sections[0].data.contentImageUrl);
@@ -81,8 +90,8 @@ describe('sitemapXmlParser test', () => {
                 expect(urlNodes[1]['image:image'][0]['image:title'][0]).to.equal(sections[1].data.contentTitle);
                 expect(urlNodes[2].lastmod[0]).to.equal(sections[2].data.pageDateCreated);    //No day limit
                 expect(urlNodes[2]['image:image']).to.not.exist;
+                expect(urlNodes[3].loc[0]).to.equal(sections[3].data.siteUrl + sections[3].data.url); // No change because it's a food url
             });
-
         });
 
         it('should get news sitemap', () => {
@@ -112,12 +121,13 @@ describe('sitemapXmlParser test', () => {
                 }
             ];
 
+            const expectedUrl = secureRootUrl + news[0].data.url;
             const xml = sitemapXmlParser.generateSitemapXml(sitemapType.section, news, baseNode);
             parseString(xml, (err, result) => {
                 const urlNodes = result.urlset.url;
                 assertXmlHeader(result.urlset.$);
                 expect(result.urlset.url).to.have.lengthOf(news.length);
-                expect(urlNodes[0].loc[0]).to.equal(news[0].data.siteUrl + news[0].data.url);
+                expect(urlNodes[0].loc[0]).to.equal(expectedUrl);
                 expect(urlNodes[0].changefreq[0]).to.equal(baseNode.data.sitemapFrequency); //Takes base node's one if doesn't exist
                 expect(urlNodes[0].priority[0]).to.equal(baseNode.data.sitemapPriority); //Takes base node's one if doesn't exist
                 expect(urlNodes[0]['n:news'][0]['n:title'][0]).to.equal(news[0].data.contentTitle);
