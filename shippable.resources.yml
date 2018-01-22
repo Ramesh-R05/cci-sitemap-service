@@ -104,7 +104,7 @@ resources:
 
   - name: sitemap-service-prod-ecs
     type: cluster
-    integration: AWS-digital-prod
+    integration: digital-prod-AWS
     pointer:
       sourceName : "app_ecs"
       region: "ap-southeast-2"
