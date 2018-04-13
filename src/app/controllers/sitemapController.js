@@ -109,7 +109,14 @@ function getSection(req, res, next) {
         .then(baseNode => getChildNodes(site, baseNode))
         .then(result => {
             const xml = xmlParser.generateSitemapXml(sitemapType.section, result.childNodes, result.baseNode);
-            setXmlResponse(res, xml);
+
+            if (xml instanceof Error) {
+                res.header('Content-Type', 'application/json');
+                res.status(404).send(JSON.stringify({status: 404, message: xml.message}));
+            } else {
+                setXmlResponse(res, xml);
+            }
+
         })
         .catch(next);
 }

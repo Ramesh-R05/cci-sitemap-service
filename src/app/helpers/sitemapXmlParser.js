@@ -92,11 +92,16 @@ function generateSectionSitemap(sections, baseNode) {
         + ` xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0">`;
 
     let baseFrequency = '';
-    let basePriority = baseNode.data.isNewsSitemap ? '1.0' : '0.7';
     let baseNodeData = baseNode.data;
+    let basePriority = baseNodeData && baseNodeData.isNewsSitemap ? '1.0' : '0.7';
+
     if (baseNodeData) {
         if (baseNodeData.sitemapFrequency) baseFrequency = baseNodeData.sitemapFrequency;
         if (baseNodeData.sitemapPriority) basePriority = baseNodeData.sitemapPriority;
+    }
+
+    if (!sections) {
+        return new Error('Section not found');
     }
 
     sections.forEach(section => {

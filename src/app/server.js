@@ -5,7 +5,6 @@ import messageController from './controllers/messageController';
 import config from './config';
 import logger from './../logger';
 
-
 export default function() {
     const server = new Server({
         name: 'SITEMAP_SERVICE',
