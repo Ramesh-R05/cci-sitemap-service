@@ -80,8 +80,8 @@ jobs:
     - TASK:
       - script: curl https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
       - script: source ~/.nvm/nvm.sh
-      - script: nvm install "5.5.0"
-      - script: nvm use "5.5.0"
+      - script: nvm install "8.9.1"
+      - script: nvm use "8.9.1"
       - script: cd ./IN/sitemap-service-repo/gitRepo/src
       - script: npm set @bxm:registry http://npm.digital.bauer-media.net.au
       - script: npm install
