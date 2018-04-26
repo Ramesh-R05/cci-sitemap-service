@@ -4,7 +4,7 @@ nconf.argv().env();
 var request = require('supertest');
 var baseUrl = nconf.get('URL');
 const assert = require('chai').assert;
-var schemas  = require("./util/schemas.js");
+var parser = require('xml2json');
 
 const app = baseUrl;
 
@@ -23,32 +23,27 @@ describe('Smoke test of sitemap service', function() {
             .end(done);
     });
 
-    it('want to get index sitemap for dolly', function(done) {
+    it('want to get index sitemap for NTL', function(done) {
         request(app)
-            .get('/v1/dolly')
+            .get('/v1/now')
             .expect(function(res) {
                 const result = res.text;
                 assert.include(result, `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`);
-                assert.include(result, `<sitemap><loc>https://dev.dolly-site.bauer-media.net.au/sitemap/win</loc></sitemap>`);
-                assert.include(result, `<sitemap><loc>https://dev.dolly-site.bauer-media.net.au/sitemap/video</loc></sitemap>`);
-                assert.include(result, `<sitemap><loc>https://dev.dolly-site.bauer-media.net.au/sitemap/lifestyle</loc></sitemap>`);
-                assert.include(result, `<sitemap><loc>https://dev.dolly-site.bauer-media.net.au/sitemap/beauty</loc></sitemap>`);
-                assert.include(result, `<sitemap><loc>https://dev.dolly-site.bauer-media.net.au/sitemap/site</loc></sitemap><sitemap>`);
-                assert.include(result, `<sitemap><loc>https://dev.dolly-site.bauer-media.net.au/sitemap/celebrity</loc></sitemap>`);
-                assert.include(result, `<sitemap><loc>https://dev.dolly-site.bauer-media.net.au/sitemap/fashion</loc></sitemap>`);
-                assert.include(result, `<sitemap><loc>https://dev.dolly-site.bauer-media.net.au/sitemap/dolly-doctor</loc></sitemap>`);
-                assert.include(result, `<sitemap><loc>https://dev.dolly-site.bauer-media.net.au/news</loc></sitemap>`);
+                const data = JSON.parse(parser.toJson(res.text));
+                expect(data.sitemapindex["sitemap"][0]["loc"] == "").to.eq(false); // To ensure the loc of a section name in the sitemap is not empty
+                expect(data.sitemapindex["sitemap"][1]["loc"] == "").to.eq(false); // To ensure the loc of a section name in the sitemap is not empty
             })
             .end(done);
     });
 
-    it('want to get section sitemap for dolly', function(done) {
+    it('want to get section sitemap for NTL', function(done) {
         request(app)
-            .get('/v1/dolly/win')
+            .get('/v1/now/celebrity')
             .expect(function(res) {
                 const result = res.text;
-                assert.include(result, schemas.sitemapSectionHeaderSchema());
-                assert.include(result, schemas.sitemapSectionBodySchema());
+                const data = JSON.parse(parser.toJson(res.text));
+                expect(data.urlset["url"][0]["loc"] == "").to.eq(false); // To ensure the loc of an item in the sitemap is not empty
+                expect(data.urlset["url"][1]["lastmod"] >= data.urlset["url"][2]["lastmod"]).to.eq(true); // To ensure they are sorted by the latest modify date/time
             })
             .end(done);
     });
