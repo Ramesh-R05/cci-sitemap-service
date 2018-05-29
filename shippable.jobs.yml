@@ -99,6 +99,8 @@ jobs:
       - IN: sitemap-service-version
       - TASK: managed
         bump: minor
+    on_success:
+      - NOTIFY: sitemap-service-deployment-notifications
 
   #6 PROD
   - name: sitemap-service-prod-deploy-master
