@@ -3,7 +3,7 @@ import { backendLogger as logger } from '@bxm/winston-logger';
 logger.transports.console.handleExceptions = false;
 logger.transports.console.level = (process.env.APP_DEBUG === 'true') ? 'debug' : 'info';
 
-if (process.env.APP_ENV === 'production' || process.env.APP_ENV === 'prod' || process.env.APP_ENV === 'sit' || process.env.NODE_ENV === 'production') {
+if (process.env.APP_ENV === 'prod' || process.env.APP_ENV === 'sit' || process.env.NODE_ENV === 'production') {
     logger.addTransports([{
         type: 'loggly',
         name: 'loggly',
