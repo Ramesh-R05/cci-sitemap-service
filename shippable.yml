@@ -4,7 +4,7 @@ build_environment: Ubuntu 12.04
 
 # language setting
 language: node_js
-node_js: "8.9.1"
+node_js: "10.19.0"
 
 # App environment variables
 env:

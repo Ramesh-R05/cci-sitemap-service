@@ -1,6 +1,6 @@
 # This dockerfile is designed to be run inside the new ECS infrastructure
-FROM 317367993082.dkr.ecr.ap-southeast-2.amazonaws.com/node-base-lite-aws:8
-MAINTAINER Richard Lennox <rlennox@bauerxcelmedia.com.au>
+FROM 317367993082.dkr.ecr.ap-southeast-2.amazonaws.com/node-base-lite-aws:10.19.0
+MAINTAINER Bxm Developer <bxmdeveloper@gmail.com>
 
 RUN mkdir /app
 ADD ./src /app
