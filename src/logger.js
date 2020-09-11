@@ -8,7 +8,8 @@ if (process.env.APP_ENV === 'prod' || process.env.APP_ENV === 'sit' || process.e
         type: 'loggly',
         name: 'loggly',
         options: {
-            inputToken: '9b4a2693-dc77-4e7e-a5ee-498845c59793',
+            // inputToken: '9b4a2693-dc77-4e7e-a5ee-498845c59793',
+            inputToken: 'inv4lide-955g3',
             subdomain: 'bauerdigital',
             tags: [
                 process.env.APP_KEY,
