@@ -1,0 +1,51 @@
+{
+"family": "sit-branch-sitemap-service-task",
+"requiresCompatibilities": [ "EC2" ],
+"executionRoleArn": "arn:aws:iam::014901580825:role/ecsTaskExecutionRole",
+"containerDefinitions":
+    [
+      {
+            "name": "sitemap-service-container",
+            "image": "317367993082.dkr.ecr.ap-southeast-2.amazonaws.com/cci-sitemap-service:latest",
+            "cpu": 512,
+            "memory": 512,
+            "memoryReservation": 512,
+            "portMappings":
+            [
+                {
+                "containerPort": 3001,
+                "hostPort": 0,
+                "protocol": "tcp"
+                }
+            ],
+            "environment":
+            [
+                {
+                "name": "APM_KEY",
+                "value": "c777240932e6282ffacc6a42ae6a0709426522bb"
+                },
+                {
+                "name": "APP_ENV",
+                "value": "sit"
+                },
+                {
+                "name": "NODE_ENV",
+                "value": "dev"
+                }
+            ],
+            "logConfiguration":
+            {
+                "logDriver": "awslogs",
+                "options":
+                {
+                    "awslogs-group": "/ecs/cci-app-ecs-logs",
+                    "awslogs-region": "ap-southeast-2",
+                    "awslogs-stream-prefix": "sit-branch-sitemap-service-logs"
+                }
+            },
+            "essential": true
+        }
+    ],
+"cpu": "512",
+"memory": "512"
+}

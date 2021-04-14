@@ -1,0 +1,155 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference # NodeJS App + Docker + ECR + ECS
+
+# Version 2.1 with ORBS for AWS ECR | ECS and DOCKER - homes-Site
+
+version: 2.1
+
+# ORBS
+
+orbs:
+  aws-ecr: circleci/aws-ecr@6.15.3
+  aws-ecs: circleci/aws-ecs@2.1.0
+
+# JOBS
+
+jobs:
+  ecr-buildandpush-dockerimage:
+    environment:
+      # Settings for APP
+      # APP_KEY: homes-site
+      # APP_STUBBED: true
+      # Settings for master
+      SIT_MASTER_SERVICE_NAME: sit-master-sitemap-service-v1
+      SIT_MASTER_TASK_NAME: sit-master-sitemap-service-task
+      SIT_MASTER_TASKDEF_JSON_FILENAME: sit-master-sitemap-service-task-def.json
+      # Settings for branch
+      SIT_BRANCH_SERVICE_NAME: sit-branch-sitemap-service-v1
+      SIT_BRANCH_TASK_NAME: sit-branch-sitemap-service-task
+      SIT_BRANCH_TASKDEF_JSON_FILENAME: sit-branch-sitemap-service-task-def.json
+      # Settings for commons
+      CLUSTER_NAME: cci-app-ecs
+      REPOS_NAME: cci-sitemap-service
+      CONTAINER_NAME: sitemap-service-container
+    machine:
+      image: ubuntu-1604:202010-01
+    working_directory: ~/sitemap-service
+    steps:
+
+# Set ENV Vars to use with ECR/DOCKER - Verify CircleCI Task
+      - run:
+          name: Set Env Vars - SHELL_VARIABLES
+          command: |
+                if [ $CIRCLE_BRANCH == master ]; then
+                  CCI_BRANCH_NAME=$CIRCLE_BRANCH.$CIRCLE_BUILD_NUM;
+                  echo "export BRANCH_NAME=$CCI_BRANCH_NAME" >> $BASH_ENV;
+                  echo "export SERVICE_NAME=$SIT_MASTER_SERVICE_NAME" >> $BASH_ENV;
+                  echo "export TASK_NAME=$SIT_MASTER_TASK_NAME" >> $BASH_ENV;
+                  echo "export TASKDEF_JSON_FILENAME=$SIT_MASTER_TASKDEF_JSON_FILENAME" >> $BASH_ENV;
+                  echo "export IMAGE_NAME=$CCI_BRANCH_NAME" >> $BASH_ENV;
+                fi
+                if [ $CIRCLE_BRANCH != master ]; then
+                  CCI_BRANCH_NAME=$(echo $CIRCLE_BRANCH | sed -e 's/\//-/g').$CIRCLE_BUILD_NUM;
+                  echo "export BRANCH_NAME=$CCI_BRANCH_NAME" >> $BASH_ENV;
+                  echo "export SERVICE_NAME=$SIT_BRANCH_SERVICE_NAME" >> $BASH_ENV;
+                  echo "export TASK_NAME=$SIT_BRANCH_TASK_NAME" >> $BASH_ENV;
+                  echo "export TASKDEF_JSON_FILENAME=$SIT_BRANCH_TASKDEF_JSON_FILENAME" >> $BASH_ENV;
+                  echo "export IMAGE_NAME=$CCI_BRANCH_NAME" >> $BASH_ENV;
+                fi
+# Print ENV Vars - Verify CircleCI ENV
+      - run:
+          name: Print Env Vars - Verify
+          command: |
+                echo "BRANCH_NAME=$BRANCH_NAME";
+                echo "CLUSTER_NAME=$CLUSTER_NAME";
+                echo "SERVICE_NAME=$SERVICE_NAME";
+                echo "TASK_NAME=$TASK_NAME";
+                echo "TASKDEF_JSON_FILENAME=$TASKDEF_JSON_FILENAME";
+                echo "REPOS_NAME=$REPOS_NAME";
+                echo "CONTAINER_NAME=$CONTAINER_NAME"
+                echo "IMAGE_NAME=$IMAGE_NAME";
+# Code Checkout - CCI_Build
+      - checkout
+
+# Prepare the VM for NodeJS App Build
+      - run:
+          name: "Install | YARN | NPM | NODE_JS"
+          command: |
+                echo -e "\n\n\n ### UBUNTU_16.04 | NVM | NPM | NODE_JS "
+                curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+                source ~/.profile
+                echo -e "\n ### Install NVM "
+                nvm install v10.19.0
+                echo -e "\n ### Setting Default NVM  "
+                nvm use v10.19.0;
+                echo -e "\n ### Setting NPM Registry as BXM "
+                npm set @bxm:registry http://npm.digital.bauer-media.net.au
+                cd src; pwd;
+                npm install
+                echo -e "\n ### Version Information "
+                echo -e "\n ### NPM Version  : $(npm --version)"
+                echo -e "\n ### Node Version : $(node --version)"
+                echo -e "\n ### Docker Version: $(docker --version)"
+# AWS ECR Integration: Build and Push Docker Image to ECR
+      - aws-ecr/build-and-push-image:
+          checkout: false  # Checkout already done in previous step
+          profile-name: profile
+          aws-access-key-id: ECR_AWS_ACCESS_KEY_ID
+          aws-secret-access-key: ECR_AWS_SECRET_ACCESS_KEY
+          account-url: AWS_ECR_ACCOUNT_URL
+          region: AWS_DEFAULT_REGION
+          repo: $REPOS_NAME
+          create-repo: true
+          repo-scan-on-push: false
+          dockerfile: Dockerfile
+          no-output-timeout: 9m # 9 minutes
+          tag: '$IMAGE_NAME,latest'
+
+# AWS ECS Integration: Create a task definition using JSON: path-to/json-file.json
+      - aws-ecs/update-task-definition-from-json:
+          task-definition-json: $TASKDEF_JSON_FILENAME
+
+# AWS ECS Integration: [ Cluster | Service | Task | PullImage-ECR | Deploy-NodeJS-APP ]
+      - aws-ecs/update-service:
+          cluster-name: arn:aws:ecs:ap-southeast-2:014901580825:cluster/$CLUSTER_NAME
+          service-name: $SERVICE_NAME
+          family: $TASK_NAME
+          container-image-name-updates: "container=$CONTAINER_NAME,tag=$IMAGE_NAME"
+          skip-task-definition-registration: false # Don't Skip
+          force-new-deployment: true
+          verify-revision-is-deployed: true
+          verification-timeout: 9m
+          max-poll-attempts: 10
+          poll-interval: 120 # check deployment status every 2 minutes
+
+# WORKFLOWS
+
+workflows:
+  version: 2
+  sitemap-service-build:
+    jobs:
+      - ecr-buildandpush-dockerimage:
+          filters:
+            branches:
+              only:
+                - circleci-project-setup
+                - master
+                - /fix.*/
+                - /feature.*/
+                - /dependabot.*/
+              ignore:
+                - main
+
+
+### END ###
+
+#          echo -e "\n ### This is pipeline ID << pipeline.id >> # << pipeline.git.branch >>"
+#          echo -e "\n ### This is pipeline ID << pipeline.id >> # << pipeline.git.branch >>"
+#          source ~/.profile
+#          tag: 'latest,$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM'
+#          echo -e "\n\n\n ### CCI_BRANCHNAME: $CCI_BRANCH_NAME"
+#
+
+#
+
+
+#
