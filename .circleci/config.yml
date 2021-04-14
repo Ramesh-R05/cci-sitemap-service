@@ -85,6 +85,7 @@ jobs:
                 npm set @bxm:registry http://npm.digital.bauer-media.net.au
                 cd src; pwd;
                 npm install
+                npm run test:ci
                 echo -e "\n ### Version Information "
                 echo -e "\n ### NPM Version  : $(npm --version)"
                 echo -e "\n ### Node Version : $(node --version)"
